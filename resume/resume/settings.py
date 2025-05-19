@@ -1,17 +1,19 @@
 from pathlib import Path
 
-from core.config import web_config
+from core.config import WebConfig
 
+
+WebConfig.validate()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = web_config.SECRET_KEY
+SECRET_KEY = WebConfig.SECRET_KEY
 
 DEBUG = True
 
 ALLOWED_HOSTS: list[str] = []
 
-INTERNAL_IPS = ['127.0.0.1',]
+INTERNAL_IPS = ['127.0.0.1', 'localhost',]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -37,7 +39,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'resume.urls'
 
-TEMPLATES_DIR = web_config.TEMPLATES_DIR
+TEMPLATES_DIR = WebConfig.TEMPLATES_DIR
 
 TEMPLATES = [
     {
@@ -107,15 +109,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'user.User'
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/media-backend/'
 
-MEDIA_ROOT = web_config.MEDIA_DIR
+MEDIA_ROOT = WebConfig.MEDIA_DIR
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = web_config.EMAIL_SERVER
-EMAIL_PORT = web_config.EMAIL_PORT
+EMAIL_HOST = WebConfig.EMAIL_SERVER
+EMAIL_PORT = WebConfig.EMAIL_PORT
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = web_config.EMAIL_LOGIN
-EMAIL_HOST_PASSWORD = web_config.EMAIL_PSWD
+EMAIL_HOST_USER = WebConfig.EMAIL_LOGIN
+EMAIL_HOST_PASSWORD = WebConfig.EMAIL_PSWD
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-PASSWORD_RESET_TIMEOUT = web_config.EMAIL_PSWD_RESET_TIMEOUT
+PASSWORD_RESET_TIMEOUT = WebConfig.EMAIL_PSWD_RESET_TIMEOUT
