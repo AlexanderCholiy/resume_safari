@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="author" content="Чолий Александр">
+    <meta 
+      name="description"
+      content="Чолий Александр — Python-разработчик. Опыт в создании 
+    веб-сервисов, работе с базами данных, автоматизации и backend-разработке 
+    на Django. Ищу интересные проекты и профессиональный рост."
+    >
+    <meta
+      name="keywords" 
+      content="Чолий Александр, Python разработчик, backend, Django, SQL, 
+    веб-разработка, резюме, портфолио, разработчик, вакансии Python, 
+    разработка сайтов"
+      >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> 
+      {% block title %}{% endblock %} 
+    </title>
+    <link rel="icon" href="{% static 'img/fav/fav.ico' %}" type="image">
+    <link 
+      rel="apple-touch-icon" 
+      sizes="180x180" 
+      href="{% static 'img/fav/apple-touch-icon.png' %}"
+      >
+    <link 
+      rel="icon" 
+      type="png" 
+      sizes="32x32" 
+      href="{% static 'img/fav/favicon-32x32.png' %}"
+      >
+    <link 
+      rel="icon" 
+      type="png" 
+      sizes="16x16" 
+      href="{% static 'img/fav/favicon-16x16.png' %}"
+      >
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body>
+  <body>
+    {% include "includes/header.html" %}
+    <main>
+      {% block content %}Контента пока нет :({% endblock %}
+    </main>
+    {% include "includes/footer.html" %}
+  </body>
+  </body>
+</html>

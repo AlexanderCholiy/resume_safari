@@ -175,3 +175,5 @@ cython_debug/
 
 # Media files
 media/*
+
+static/img/*

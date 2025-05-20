@@ -14,20 +14,27 @@ load_dotenv(ENV_PATH)
 
 
 class Config:
-    def _raise_if_missing(self, items: list[str], check_func, error_cls):
+    def _raise_if_missing(
+        self: 'Config',
+        items: list[str],
+        check_func: callable,
+        error_cls: ConfigEnvError | ConfigDirError | ConfigFileError
+    ) -> None:
         missing = [item for item in items if not check_func(item)]
         if missing:
             raise error_cls(missing)
 
-    def validate_env_vars(self, env_vars: dict[str, Optional[str]]) -> None:
+    def validate_env_vars(
+        self: 'Config', env_vars: dict[str, Optional[str]]
+    ) -> None:
         missing_vars = [name for name, val in env_vars.items() if val is None]
         if missing_vars:
             raise ConfigEnvError(missing_vars)
 
-    def check_dirs(self, dirs: list[str]) -> None:
+    def check_dirs(self: 'Config', dirs: list[str]) -> None:
         self._raise_if_missing(dirs, os.path.isdir, ConfigDirError)
 
-    def check_files(self, files: list[str]) -> None:
+    def check_files(self: 'Config', files: list[str]) -> None:
         self._raise_if_missing(files, os.path.isfile, ConfigFileError)
 
 
@@ -41,7 +48,8 @@ class WebConfig(Config):
         os.getenv('WEB_EMAIL_PSWD_RESET_TIMEOUT', 14400))
 
     MEDIA_DIR: str = os.path.join(ROOT_DIR, 'media')
-    TEMPLATES_DIR: str = os.path.join(ROOT_DIR, 'templates')
+    TEMPLATES_DIR: str = os.path.join(ROOT_DIR, 'templates',)
+    STATIC_DIR: str = os.path.join(ROOT_DIR, 'static')
 
     @staticmethod
     def validate() -> None:

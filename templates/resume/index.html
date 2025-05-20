@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %} 
+  Resume Safari
+{% endblock %} 
+
+{% block content %}
+  {% for resume in resume_list %}
+    <h2>{{ resume.user.first_name }} {{ resume.user.second_name }}</h2>
+    <p>{{ resume.position }}</p>
+    <a href="{% url 'user:resume_detail' resume.slug %}">Перейти к резюме</a>
+  {% endfor %}
+{% endblock %}
