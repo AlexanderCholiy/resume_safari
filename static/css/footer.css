@@ -1,0 +1,100 @@
+footer {
+    background-color: var(--light-background-color);
+    color: var(--dark-color);
+    text-align: center;
+    padding: 40px 30px;
+    transition: 
+        background-color var(--transition-value),
+        color var(--transition-value);
+    box-shadow: 0 -2px 4px var(--dark-add-color);
+}
+
+body.dark footer {
+    background-color: var(--dark-background-color);
+    color: var(--light-color);
+    box-shadow: 0 -2px 4px var(--light-add-color);
+}
+
+footer .logo h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+footer .social {
+    margin: 1rem 0;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+footer .social a {
+    font-size: 1.8rem;
+    color: var(--dark-add-color);
+    transition: color var(--transition-value);
+}
+
+body.dark footer .social a {
+    color: var(--light-add-color);
+}
+
+footer .social a:hover {
+    color: var(--dark-blue-color);
+}
+
+footer .bottom {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#scroll-to-top {
+    background: none;
+    border: 1px solid var(--dark-add-color);
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    color: var(--dark-color);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 
+        background-color var(--transition-value),
+        color var(--transition-value);
+}
+
+body.dark #scroll-to-top {
+    border: 1px solid var(--light-add-color);
+    color: var(--light-color);
+}
+
+#scroll-to-top:hover {
+    background-color: var(--dark-add-background-color);
+    color: var(--light-color);
+}
+
+body.dark #scroll-to-top:hover {
+    background-color: var(--light-add-background-color);
+    color: var(--dark-color);
+}
+
+footer .main-nav {
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+@media (max-width: 768px) {
+    footer .bottom {
+        font-size: 0.8rem;
+    }
+
+    footer .social a {
+        font-size: 1.5rem;
+    }
+    footer .main-nav {
+        margin: 0;
+        margin-bottom: 30px;
+    }
+}

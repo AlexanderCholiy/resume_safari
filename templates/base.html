@@ -38,15 +38,31 @@
       sizes="16x16" 
       href="{% static 'img/fav/favicon-16x16.png' %}"
       >
+    <link 
+      rel='stylesheet' 
+      href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'
+      >
+    <link rel="stylesheet" href="{% static 'css/root.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/loader.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main_nav.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
   </head>
   <body>
-  <body>
-    {% include "includes/header.html" %}
-    <main>
-      {% block content %}Контента пока нет :({% endblock %}
-    </main>
-    {% include "includes/footer.html" %}
-  </body>
+    <div class="wrapper">
+      <div id="spinner-overlay" class="spinner-overlay">
+        <div class="spinner"></div>
+      </div>
+      {% include "includes/header.html" %}
+      <main>
+        {% block content %}Контента пока нет :({% endblock %}
+      </main>
+      {% include "includes/footer.html" %}
+    </div>
+    
+    <script src="{% static 'js/loader.js' %}"></script>
+    <script src="{% static 'js/theme_toggle.js' %}"></script>
+    <script src="{% static 'js/scroll_to_top.js' %}"></script>
   </body>
 </html>
