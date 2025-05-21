@@ -1,0 +1,69 @@
+{% load static %}
+
+<div class="resume-card">
+  <div class="resume-info">
+    <h2>{{ resume.user.get_full_name }}</h2>
+
+    <div class="position-age">
+      <p>{{ resume.position }}</p>
+      {% if resume.user.age %}
+        <p>Возраст: {{ resume.user.age }}</p>
+      {% endif %}
+    </div>
+
+    <p>{{ resume.about_me|linebreaksbr }}</p>
+  </div>
+
+  <div class="resume-meta">
+    {% if resume.user.avatar %}
+      <img 
+        src="{{ resume.user.avatar.url }}" 
+        title="{{ resume.user.get_full_name }}"
+        alt="Аватар"
+      >
+    {% else %}
+      <img 
+        src="{% static 'img/default_avatar.jpg' %}" 
+        title="{{ resume.user.get_full_name }}"
+        alt="Аватар по умолчанию"
+      >
+    {% endif %}
+    {% if resume.user.location %}
+      <p class="contact">
+        <i class='bx bx-current-location'></i>{{ resume.user.location.city }}
+      </p>
+    {% endif %}
+    {% if resume.user.phone %}
+      <p class="contact">
+        <i class='bx bxs-phone'></i>{{ resume.user.phone }}
+      </p>
+    {% endif %}
+    {% if resume.user.email %}
+      <p class="contact">
+        <i class='bx bx-envelope'></i>{{ resume.user.email }}
+      </p>
+    {% endif %}
+    {% if resume.user.git_hub_link or resume.user.telegram_id %}
+      <p class="contact github-telegram">
+        {% if resume.user.telegram_id %}
+          <a 
+            href="https://t.me/{{ resume.user.telegram_id }}"
+            target="_blank"
+            aria-label="Telegram"
+          >
+            <i class="bx bxl-telegram"></i>
+          </a>
+        {% endif %}
+        {% if resume.user.git_hub_link %}
+          <a 
+            href="{{ resume.user.git_hub_link }}"
+            target="_blank"
+            aria-label="GitHub"
+          >
+            <i class="bx bxl-github"></i>
+          </a>
+        {% endif %}
+      </p>
+    {% endif %}
+  </div>
+</div>

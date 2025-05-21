@@ -10,7 +10,6 @@ from .constants import (
     MAX_COUNTRY_LENGTH,
     MAX_CITY_LENGTH,
     MAX_GITHUB_LINK_LENGTH,
-    MAX_TELEGRAM_ID_LENGTH,
     MAX_COMPANY_NAME_LENGTH,
     MAX_POSITION_LENGTH,
     MAX_EDUCATION_DEGREE_LENGTH,
@@ -27,9 +26,8 @@ class User(AbstractUser):
         max_length=MAX_USER_PATRONYMIC_LENGTH,
         blank=True,
     )
-    telegram_id = models.CharField(
+    telegram_id = models.SlugField(
         'Имя пользователя в Telegram',
-        max_length=MAX_TELEGRAM_ID_LENGTH,
         blank=True,
         null=True,
     )

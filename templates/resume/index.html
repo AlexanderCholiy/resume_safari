@@ -10,9 +10,7 @@
 {% endblock %}
 
 {% block content %}
-  <div class="resume-list-wrapper">
-    {% for resume in resume_list %}
-      {% include "resume/includes/resume_card.html" %}
-    {% endfor %}
-  </div>
+  {% for resume in resume_list %}
+    {% include "resume/includes/resume_card.html" %}
+  {% endfor %}
 {% endblock %}

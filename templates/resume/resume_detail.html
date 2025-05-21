@@ -1,6 +1,22 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %} 
+  {{ resume.user.get_full_name }}
+{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/resume_detail/summary.css' %}">
+{% endblock %}
 
 {% block content %}
-  <p>{{ resume.user.first_name }} {{ resume.user.second_name }}</p>
-  <p>{{ resume.position }}</p>
+  <section id="summary">
+    {% include "resume/includes/summary.html" %}
+  </section>
+  <section id="skills">
+  </section>
+  <section id="education">
+  </section>
+  <section id="experience">
+  </section>
 {% endblock %}

@@ -58,7 +58,9 @@
       </div>
       {% include "includes/header.html" %}
       <main>
-        {% block content %}Контента пока нет :({% endblock %}
+        <div class="main-wrapper">
+          {% block content %}Контента пока нет :({% endblock %}
+        </div>
       </main>
       {% include "includes/footer.html" %}
     </div>
