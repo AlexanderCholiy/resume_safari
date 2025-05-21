@@ -1,0 +1,134 @@
+.resume-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 1200px;
+    width: 100%;
+}
+
+.resume-card {
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--light-add-background-color);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+  transition: background-color var(--transition-value);
+}
+
+body.dark .resume-card {
+  background-color: var(--dark-add-background-color);
+}
+
+.resume-info {
+  flex: 1 1 60%;
+}
+
+.resume-info h2 {
+  margin-top: 0;
+  font-size: 1.6rem;
+  color: var(--dark-color);
+  transition: color var(--transition-value);
+}
+
+body.dark .resume-info h2 {
+  color: var(--light-color);
+}
+
+.position-age {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  margin: 0.5rem 0 1rem;
+  font-weight: bold;
+}
+
+.position-age p:first-child {
+  color: var(--dark-red-color);
+}
+
+body.dark .position-age p:first-child {
+  color: var(--light-blue-color);
+}
+
+.about {
+  line-height: 1.5;
+}
+
+.resume-meta {
+  flex: 1 1 35%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.resume-meta img {
+  max-width: 250px;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: box-shadow var(--transition-value);
+}
+
+body.dark .resume-meta img {
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+}
+
+.resume-meta .location i {
+  margin-right: 6px;
+  font-size: 0.8rem;
+}
+
+.resume-meta .location {
+  font-weight: bold;
+  margin: 0;
+}
+
+.resume-meta .btn-details {
+  margin-top: auto;
+  padding: 0.6rem 1.4rem;
+  background-color: var(--dark-blue-color);
+  color: var(--light-color);
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 8px;
+  display: inline-block;
+  transition: background-color var(--transition-value);
+}
+
+body.dark .resume-meta .btn-details {
+  background-color: var(--dark-red-color);
+}
+
+.resume-meta .btn-details:hover {
+  background-color: var(--light-blue-color);
+}
+
+body.dark .resume-meta .btn-details:hover {
+  background-color: var(--light-red-color);
+}
+
+@media (max-width: 768px) {
+  .resume-card {
+    align-items: center;
+    text-align: center;
+  }
+
+  .resume-info, .resume-meta {
+    flex: 1 1 100%;
+  }
+
+  .position-age {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .resume-meta img {
+    max-width: 200px;
+  }
+}

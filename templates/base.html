@@ -48,6 +48,8 @@
     <link rel="stylesheet" href="{% static 'css/header.css' %}">
     <link rel="stylesheet" href="{% static 'css/main_nav.css' %}">
     <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% block extra_css %}{% endblock %}
   </head>
   <body>
     <div class="wrapper">
@@ -64,5 +66,6 @@
     <script src="{% static 'js/loader.js' %}"></script>
     <script src="{% static 'js/theme_toggle.js' %}"></script>
     <script src="{% static 'js/scroll_to_top.js' %}"></script>
+    {% block extra_js %}{% endblock %}
   </body>
 </html>

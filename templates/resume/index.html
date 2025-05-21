@@ -1,12 +1,18 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block title %} 
   Resume Safari
-{% endblock %} 
+{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/resume_card.css' %}">
+{% endblock %}
 
 {% block content %}
-  {% for resume in resume_list %}
-    <h2>{{ resume.user.first_name }} {{ resume.user.second_name }}</h2>
-    <p>{{ resume.position }}</p>
-    <a href="{% url 'user:resume_detail' resume.slug %}">Перейти к резюме</a>
-  {% endfor %}
+  <div class="resume-list-wrapper">
+    {% for resume in resume_list %}
+      {% include "resume/includes/resume_card.html" %}
+    {% endfor %}
+  </div>
 {% endblock %}

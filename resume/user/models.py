@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.text import slugify
 from unidecode import unidecode
+from django.utils import timezone
 
 from core.models import Grid, Skill, Timestamp
 from .constants import (
@@ -57,19 +58,40 @@ class User(AbstractUser):
         blank=True,
         null=True,
     )
-    # avatar = models.ImageField(
-    #     'Аватар',
-    #     upload_to='avatars/',
-    #     blank=True,
-    #     null=True,
-    # )
+    avatar = models.ImageField(
+        'Аватар',
+        upload_to='users/',
+        blank=True,
+        null=True,
+    )
+
+    def get_full_name(self: 'User') -> str:
+        full_name = (
+            f'{self.last_name or ""} '
+            f'{self.first_name or ""} '
+            f'{self.patronymic or ""} '
+            .strip()
+        )
+        return full_name or self.username
+
+    def age(self: 'User') -> int | None:
+        if self.date_of_birth:
+            today = timezone.now().date()
+            return (
+                today.year - self.date_of_birth.year -
+                (
+                    (today.month, today.day) < (
+                        self.date_of_birth.month, self.date_of_birth.day)
+                )
+            )
+        return None
 
     class Meta:
         verbose_name = 'пользователь'
         verbose_name_plural = 'Пользователи'
 
     def __str__(self: 'User') -> str:
-        return self.username
+        return self.get_full_name()
 
 
 class Location(models.Model):
@@ -95,7 +117,7 @@ class Location(models.Model):
         ordering = ('-country', '-city',)
 
     def __str__(self: 'Location') -> str:
-        return f'{self.country} - {self.city}'
+        return f'г. {self.city} ({self.country})'
 
 
 class HardSkillName(Skill):

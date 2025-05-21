@@ -83,10 +83,6 @@ body.dark .active {
   flex-direction: column;
 }
 
-main {
-  flex: 1;
-}
-
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;

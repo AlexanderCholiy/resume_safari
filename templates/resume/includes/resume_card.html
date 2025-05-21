@@ -1,0 +1,40 @@
+{% load static %}
+
+<div class="resume-card">
+  <div class="resume-info">
+    <h2>{{ resume.user.get_full_name }}</h2>
+
+    <div class="position-age">
+      <p>{{ resume.position }}</p>
+      {% if resume.user.age %}
+        <p>Возраст: {{ resume.user.age }}</p>
+      {% endif %}
+    </div>
+
+    <p>{{ resume.about_me|linebreaksbr|truncatewords:128 }}</p>
+  </div>
+
+  <div class="resume-meta">
+    {% if resume.user.avatar %}
+      <img 
+        src="{{ resume.user.avatar.url }}" 
+        title="{{ resume.user.get_full_name }}"
+        alt="Аватар"
+      >
+    {% else %}
+      <img 
+        src="{% static 'img/default_avatar.jpg' %}" 
+        title="{{ resume.user.get_full_name }}"
+        alt="Аватар по умолчанию"
+      >
+    {% endif %}
+    {% if resume.user.location %}
+      <p class="location">
+        <i class='bx bx-current-location'></i>{{ resume.user.location.city }}
+      </p>
+    {% endif %}
+    <a href="{% url 'user:resume_detail' resume.slug %}" class="btn-details">
+      Перейти к резюме
+    </a>
+  </div>
+</div>

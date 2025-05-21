@@ -39,6 +39,14 @@ body.dark header {
     transition: color var(--transition-value);
 }
 
+.theme-toggle:hover {
+    color: var(--dark-color);
+}
+
+body.dark .theme-toggle:hover {
+    color: var(--light-color);
+}
+
 body.dark .theme-toggle {
     color: var(--light-add-color);
 }
