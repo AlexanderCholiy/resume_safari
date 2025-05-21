@@ -8,6 +8,7 @@
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/resume_detail/summary.css' %}">
   <link rel="stylesheet" href="{% static 'css/resume_detail/skills.css' %}">
+  <link rel="stylesheet" href="{% static 'css/tooltip.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -25,4 +26,8 @@
   </section>
   <section id="experience">
   </section>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'js/tooltip.js' %}"></script>
 {% endblock %}

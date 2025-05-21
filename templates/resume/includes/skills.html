@@ -11,7 +11,18 @@
             {% for cell in row %}
               <td>
                 {% for skill in cell %}
-                  <div><i class='bx bxs-circle'></i>{{ skill.skill.name }}</div>
+                  {% if skill.skill.description %}
+                    <div class="tooltip">
+                      <i class='bx bxs-circle'></i>{{ skill.skill.name }}
+                      <div class="tooltip-box">
+                        <small>{{ skill.skill.description }}</small>
+                      </div>
+                    </div>
+                  {% else %}
+                    <div>
+                      <i class='bx bxs-circle'></i>{{ skill.skill.name }}
+                    </div>
+                  {% endif %}
                 {% endfor %}
               </td>
             {% endfor %}
@@ -33,7 +44,16 @@
             {% for cell in row %}
               <td>
                 {% for skill in cell %}
-                  <div><i class='bx bxs-circle'></i>{{ skill.skill.name }}</div>
+                  {% if skill.skill.description %}
+                    <div class="tooltip clickable">
+                      {{ skill.skill.name }}
+                      <div class="tooltip-box">
+                        <small>{{ skill.skill.description }}</small>
+                      </div>
+                    </div>
+                  {% else %}
+                    <div class="non-clickable">{{ skill.skill.name }}</div>
+                  {% endif %}
                 {% endfor %}
               </td>
             {% endfor %}

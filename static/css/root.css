@@ -2,7 +2,7 @@
     --transition-value: 0.2s ease;
 
     --light-background-color: rgb(245, 240, 240);
-    --light-add-background-color: rgb(235, 230, 230);
+    --light-add-background-color: rgb(225, 220, 220);
     --light-color: white;
     --light-add-color: rgb(235, 225, 225);
     
@@ -14,14 +14,14 @@
     --light-red-color: rgb(220, 20, 60);
     --light-green-color: rgb(0, 165, 0);
     --light-blue-color: rgb(65, 105, 225);
-    --light-yellow-color: rgb(255, 215, 0);
+    --light-yellow-color: gold;
     --light-magenta-color: rgb(155, 0, 155);
     --light-cyan-color: rgb(0, 125, 125);
 
     --dark-red-color: rgb(183, 32, 62);
     --dark-green-color: rgb(16, 125, 63);
     --dark-blue-color: rgb(60, 88, 174);
-    --dark-yellow-color: rgb(191, 169, 41);
+    --dark-yellow-color: goldenrod;
     --dark-magenta-color: rgb(91, 15, 121);
     --dark-cyan-color: rgb(14, 69, 69);
 }
