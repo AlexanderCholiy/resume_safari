@@ -7,14 +7,20 @@
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/resume_detail/summary.css' %}">
+  <link rel="stylesheet" href="{% static 'css/resume_detail/skills.css' %}">
 {% endblock %}
 
 {% block content %}
   <section id="summary">
     {% include "resume/includes/summary.html" %}
   </section>
-  <section id="skills">
-  </section>
+  {% if hard_skills or soft_skills %}
+    <section id="skills">
+      {% include "resume/includes/skills.html" %}
+    </section>
+  {% endif %}
+  {% if projects %}
+  {% endif %}
   <section id="education">
   </section>
   <section id="experience">

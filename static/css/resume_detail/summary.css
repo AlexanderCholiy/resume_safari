@@ -1,11 +1,3 @@
-.resume-list-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    max-width: 1200px;
-    width: 100%;
-}
-
 .resume-card {
   display: flex;
   justify-content: space-between;

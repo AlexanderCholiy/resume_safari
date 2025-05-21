@@ -1,0 +1,46 @@
+<div class="resume-card">
+  {% if hard_skills %}
+  <div class="hard-skills">
+    <div class="caption">
+      <h2><i class='bx bx-bar-chart-alt-2'></i>Hard Skills</h2>
+    </div>
+    <table>
+      <tbody>
+        {% for row in hard_skills %}
+          <tr>
+            {% for cell in row %}
+              <td>
+                {% for skill in cell %}
+                  <div><i class='bx bxs-circle'></i>{{ skill.skill.name }}</div>
+                {% endfor %}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+  {% if soft_skills %}
+  <div class="soft-skills">
+    <div class="caption">
+      <h2><i class='bx bx-scatter-chart'></i>Soft Skills</h2>
+    </div>
+    <table>
+      <tbody>
+        {% for row in soft_skills %}
+          <tr>
+            {% for cell in row %}
+              <td>
+                {% for skill in cell %}
+                  <div><i class='bx bxs-circle'></i>{{ skill.skill.name }}</div>
+                {% endfor %}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>

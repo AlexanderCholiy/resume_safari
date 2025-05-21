@@ -156,6 +156,7 @@ class HardSkill(Grid):
                 name='unique_resume_hard_skill'
             )
         ]
+        ordering = ('grid_row', 'grid_column', 'updated_at',)
 
     def __str__(self: 'HardSkill') -> str:
         return (
@@ -188,6 +189,7 @@ class SoftSkill(Grid):
                 name='unique_resume_soft_skill'
             )
         ]
+        ordering = ('grid_row', 'grid_column', 'updated_at',)
 
     def __str__(self: 'SoftSkill') -> str:
         return (

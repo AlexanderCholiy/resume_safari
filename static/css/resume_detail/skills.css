@@ -1,0 +1,78 @@
+/* Блоки таблиц */
+.resume-card .hard-skills,
+.resume-card .soft-skills {
+  flex: 1 1 45%;
+  min-width: 300px;
+}
+
+/* Заголовки */
+.resume-card .hard-skills h2,
+.resume-card .soft-skills h2 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--brand-text-color);
+}
+
+/* Таблица */
+.resume-card table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--table-background, #fff);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+body.dark .resume-card table {
+  background-color: var(--dark-card-background, #2a2a2a);
+}
+
+/* Ячейки */
+.resume-card td {
+  padding: 0.75rem 1rem;
+  vertical-align: top;
+  border: 1px solid var(--border-color, #ddd);
+  line-height: 1.6;
+  height: 100%;
+}
+
+/* Контент внутри ячеек */
+.resume-card td div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--menu-text-color);
+}
+
+/* Иконки */
+.resume-card td i.bxs-circle {
+  font-size: 0.6rem;
+  color: gold;
+}
+
+/* Адаптация под мобильные устройства */
+@media (max-width: 768px) {
+  .resume-card {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .resume-card .hard-skills,
+  .resume-card .soft-skills {
+    width: 100%;
+  }
+
+  .resume-card td {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+
+  .resume-card .hard-skills h2,
+  .resume-card .soft-skills h2 {
+    font-size: 1.1rem;
+  }
+}
