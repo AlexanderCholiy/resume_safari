@@ -1,56 +1,66 @@
-from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse
+from django.views.generic import ListView, DetailView
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
-from django.db.models import Prefetch
+from django.db.models import Prefetch, QuerySet
 
 from .models import (
     Resume, HardSkill, SoftSkill, ResumeEducation, ResumeExperience)
 from core.grid import build_grid, grid_contains_any_items
+from .constants import MAX_RESUMES_PER_PAGE
 
 
 User = get_user_model()
 
 
-def index(request: HttpRequest) -> HttpResponse:
+class ResumeListView(ListView):
+    model = Resume
     template_name = 'resume/index.html'
-    resume_list = (
-        Resume.objects
-        .filter(user__is_active=True, is_published=True)
-    ).select_related('user', 'user__location')
-    context = {'resume_list': resume_list}
-    return render(request, template_name, context)
+    paginate_by = MAX_RESUMES_PER_PAGE
+
+    def get_queryset(self: 'ResumeListView') -> 'QuerySet[Resume]':
+        return (
+            Resume.objects
+            .filter(user__is_active=True, is_published=True)
+            .select_related('user', 'user__location')
+            .order_by('-created_at', 'pk')
+        )
 
 
-def resume_detail(request: HttpRequest, slug: str) -> HttpResponse:
+class ResumeDetailView(DetailView):
+    model = Resume
     template_name = 'resume/resume_detail.html'
-    resume = get_object_or_404(
-        Resume.objects
-        .select_related('user', 'user__location')
-        .prefetch_related(
-            Prefetch(
-                'resume_educations',
-                queryset=ResumeEducation.objects.select_related('education')
-            ),
-            Prefetch(
-                'resume_experiences',
-                queryset=ResumeExperience.objects.select_related('experience')
-            ),
-        ),
-        slug=slug,
-        user__is_active=True,
-        is_published=True,
-    )
+    context_object_name = 'resume'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
 
-    hard_skills = build_grid(HardSkill.objects.filter(resume=resume))
-    soft_skills = build_grid(SoftSkill.objects.filter(resume=resume))
+    def get_queryset(self: 'ResumeDetailView') -> 'QuerySet[Resume]':
+        return (
+            Resume.objects
+            .select_related('user', 'user__location')
+            .prefetch_related(
+                Prefetch(
+                    'resume_educations',
+                    queryset=ResumeEducation.objects.select_related(
+                        'education')
+                ),
+                Prefetch(
+                    'resume_experiences',
+                    queryset=ResumeExperience.objects.select_related(
+                        'experience')
+                ),
+            )
+            .filter(user__is_active=True, is_published=True)
+        )
 
-    check_hard_slills = grid_contains_any_items(hard_skills)
-    check_soft_slills = grid_contains_any_items(soft_skills)
+    def get_context_data(self: 'ResumeDetailView', **kwargs: dict) -> dict:
+        context = super().get_context_data(**kwargs)
+        resume = self.object
 
-    context = {
-        'resume': resume,
-        'hard_skills': hard_skills if check_hard_slills else None,
-        'soft_skills': soft_skills if check_soft_slills else None,
-    }
-    return render(request, template_name, context)
+        hard_skills = build_grid(HardSkill.objects.filter(resume=resume))
+        soft_skills = build_grid(SoftSkill.objects.filter(resume=resume))
+
+        if grid_contains_any_items(hard_skills):
+            context['hard_skills'] = hard_skills
+        if grid_contains_any_items(soft_skills):
+            context['soft_skills'] = soft_skills
+
+        return context

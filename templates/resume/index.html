@@ -14,10 +14,17 @@
     rel="stylesheet" 
     href="{% static 'css/resume_list/short_summary.css' %}"
     >
+  {% if page_obj.has_other_pages %}
+    <link 
+      rel="stylesheet" 
+      href="{% static 'css/paginator.css' %}"
+      >
+  {% endif %}
 {% endblock %}
 
 {% block content %}
-  {% for resume in resume_list %}
+  {% for resume in page_obj %}
     {% include "resume/includes/short_summary.html" %}
   {% endfor %}
+  {% include "includes/paginator.html" %}
 {% endblock %}
