@@ -6,6 +6,8 @@
 {% endblock %}
 
 {% block extra_css %}
+  <link 
+    rel="stylesheet" href="{% static 'css/resume_detail/resume_card.css' %}">
   <link rel="stylesheet" href="{% static 'css/resume_detail/summary.css' %}">
   <link rel="stylesheet" href="{% static 'css/resume_detail/skills.css' %}">
   <link rel="stylesheet" href="{% static 'css/tooltip.css' %}">
@@ -30,4 +32,5 @@
 
 {% block extra_js %}
   <script src="{% static 'js/tooltip.js' %}"></script>
+  <script src="{% static 'js/resume/change_avatar.js' %}"></script>
 {% endblock %}

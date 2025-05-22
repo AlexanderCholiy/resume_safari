@@ -5,7 +5,7 @@ footer {
     padding: 40px 30px;
     transition: 
         background-color var(--transition-value),
-        color var(--transition-value);
+        /* color var(--transition-value); */
     box-shadow: 0 -2px 4px var(--dark-add-color);
 }
 
@@ -31,7 +31,7 @@ footer .social {
 footer .social a {
     font-size: 1.8rem;
     color: var(--dark-add-color);
-    transition: color var(--transition-value);
+    /* transition: color var(--transition-value); */
 }
 
 body.dark footer .social a {
@@ -61,7 +61,7 @@ footer .bottom {
     font-size: 1rem;
     transition: 
         background-color var(--transition-value),
-        color var(--transition-value);
+        /* color var(--transition-value); */
 }
 
 body.dark #scroll-to-top {

@@ -1,0 +1,26 @@
+.resume-card {
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--light-add-background-color);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+  transition: background-color var(--transition-value);
+}
+
+body.dark .resume-card {
+  background-color: var(--dark-add-background-color);
+}
+
+#default-avatar {
+  transition: opacity var(--transition-value);
+}
+
+@media (max-width: 768px) {
+  .resume-card {
+    align-items: center;
+    text-align: center;
+  }
+}

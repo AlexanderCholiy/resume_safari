@@ -12,8 +12,8 @@
     font-size: 1rem;
     color: var(--dark-add-color);
     transition: 
-        color var(--transition-value),
-        border-bottom var(--transition-value);
+        color var(--transition-value);
+        /* border-bottom var(--transition-value); */
     position: relative;
     padding: 0.25rem 0;
 }

@@ -5,6 +5,7 @@
 .resume-card .hard-skills {
   flex: 0 1 60%;
   min-width: 300px;
+  text-align: left;
 }
 
 .resume-card .soft-skills {
@@ -12,41 +13,52 @@
   min-width: 300px;
 }
 
-.resume-card .hard-skills h2,
-.resume-card .soft-skills h2 {
-  font-size: 1.6rem;
-  margin-top: 0;
-  margin-bottom: 1rem;
+.resume-card h2 {
   display: flex;
+  gap: 0.75rem;
+  font-weight: 600;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
   align-items: center;
-  gap: 0.5rem;
 }
 
 .resume-card .hard-skills h2 {
-    color: var(--dark-blue-color);
-}
-
-.resume-card .soft-skills h2 {
-    color: var(--dark-red-color);
+  justify-content: left;
+  color: var(--dark-blue-color);
 }
 
 body.dark .resume-card .hard-skills h2 {
-    color: var(--light-red-color);
+  color: var(--light-red-color);
+}
+
+.resume-card .soft-skills h2 {
+  justify-content: center;
+  color: var(--dark-red-color);
 }
 
 body.dark .resume-card .soft-skills h2 {
-    color: var(--light-blue-color);
+  color: var(--light-blue-color);
+}
+
+.hard-skills td div {
+  justify-content: flex-start;
+}
+
+.soft-skills td div {
+  justify-content: center;
 }
 
 .resume-card table {
   width: 100%;
   border-collapse: collapse;
-  border-radius: 12px;
   overflow: hidden;
 }
 
 .resume-card td {
-  padding: 5px 0;
+  padding: 10px;
+  height: 30px;
+  vertical-align: middle;
 }
 
 .resume-card td div {
@@ -57,22 +69,63 @@ body.dark .resume-card .soft-skills h2 {
 
 .resume-card td i {
   font-size: 0.6rem;
-  color: var(--dark-red-color);
+  color: var(--light-background-color);
+}
+
+body.dark .resume-card td i {
+  color: var(--dark-background-color);
+}
+
+.soft-skills table {
+  background-color: var(--light-background-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+body.dark .soft-skills table {
+  background-color: var(--dark-background-color);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.08);
+}
+
+.soft-skills td {
+  border-bottom: 1px solid var(--light-add-background-color);
+}
+
+body.dark .soft-skills td {
+  border-bottom: 1px solid var(--dark-add-background-color);
+}
+
+.hard-skills td {
+    border-bottom: 1px solid var(--light-background-color);
+}
+
+body.dark .hard-skills td {
+    border-bottom: 1px solid var(--dark-background-color);
 }
 
 @media (max-width: 768px) {
   .resume-card .hard-skills,
   .resume-card .soft-skills {
     width: 100%;
+    text-align: center;
   }
 
-  /* .resume-card td {
-    font-size: 0.9rem;
-    padding: 0.5rem;
-  } */
+  .resume-card .hard-skills h2 {
+    justify-content: center;
+  }
 
-  .resume-card .hard-skills h2,
-  .resume-card .soft-skills h2 {
-    font-size: 1.4rem;
+  .hard-skills td div,
+  .soft-skills td div {
+    justify-content: center;
+  }
+
+  .resume-card {
+    flex-direction: column;
+  }
+
+  #skills .resume-card table {
+    width: 100%;
+    text-align: center;
   }
 }

@@ -15,19 +15,20 @@
   </div>
 
   <div class="resume-meta">
-    {% if resume.user.avatar %}
-      <img 
-        src="{{ resume.user.avatar.url }}" 
-        title="{{ resume.user.get_full_name }}"
-        alt="Аватар"
-      >
-    {% else %}
-      <img 
-        src="{% static 'img/default_avatar.jpg' %}" 
-        title="{{ resume.user.get_full_name }}"
-        alt="Аватар по умолчанию"
-      >
-    {% endif %}
+    <div class="avatar-wrapper">
+      {% if resume.user.avatar %}
+        <img src="{{ resume.user.avatar.url }}" alt="Аватар" class="avatar">
+      {% else %}
+        <img 
+          id="default-avatar"
+          data-avatar-light="{% static 'img/default_avatar_light.jpg' %}"
+          data-avatar-dark="{% static 'img/default_avatar_dark.jpg' %}"
+          src="{% static 'img/default_avatar_light.jpg' %}" 
+          title="{{ resume.user.get_full_name }}"
+          alt="Аватар по умолчанию"
+        />
+      {% endif %}
+    </div>
     {% if resume.user.location %}
       <p class="location">
         <i class='bx bx-current-location'></i>{{ resume.user.location.city }}
