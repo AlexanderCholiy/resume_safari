@@ -1,0 +1,87 @@
+#education .resume-card {
+  display: block;
+}
+
+.education-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+#education .resume-card h2 {
+    color: var(--dark-red-color);
+}
+
+body.dark #education .resume-card h2 {
+    color: var(--light-blue-color);
+}
+
+.education-item {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--light-background-color);
+  gap: 1rem;
+}
+
+body.dark .education-item {
+  border-bottom: 1px solid var(--dark-background-color);
+}
+
+.education-left,
+.education-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.education-left {
+  flex: 0 0 35%;
+}
+
+.education-right {
+  flex: 0 0 60%;
+}
+
+.education-name,
+.education-institution {
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+  line-height: 1.2rem;
+}
+
+.education-year,
+.education-field {
+  font-size: 0.9rem;
+  color: var(--dark-gray-color);
+  line-height: 1.2rem;
+}
+
+body.dark .education-year,
+.education-field {
+  color: var(--light-gray-color);
+}
+
+@media (max-width: 768px) {
+  .education-item {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .education-left,
+  .education-right {
+    flex: 100%;
+  }
+
+  .education-name,
+  .education-institution {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .education-year,
+  .education-field {
+    text-align: center;
+    font-size: 0.85rem;
+  }
+}

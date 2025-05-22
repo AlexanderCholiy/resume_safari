@@ -10,7 +10,8 @@
     --dark-add-background-color: rgb(40, 40, 45);
     --dark-color: black;
     --dark-add-color: rgb(30, 30, 40);
-    
+
+    --light-gray-color: rgb(144, 144, 144);
     --light-red-color: rgb(220, 20, 60);
     --light-green-color: rgb(0, 165, 0);
     --light-blue-color: rgb(65, 105, 225);
@@ -18,6 +19,7 @@
     --light-magenta-color: rgb(155, 0, 155);
     --light-cyan-color: rgb(0, 125, 125);
 
+    --dark-gray-color: rgb(102, 102, 102);
     --dark-red-color: rgb(183, 32, 62);
     --dark-green-color: rgb(16, 125, 63);
     --dark-blue-color: rgb(60, 88, 174);

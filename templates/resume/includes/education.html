@@ -1,0 +1,24 @@
+<div class="resume-card">
+  <h2>Образование</h2>
+  <div class="education-list">
+    {% for education in resume.educations.all %}
+      <div class="education-item">
+        <div class="education-left">
+          <div class="education-name">{{ education.degree }}</div>
+          <div class="education-year">
+            {% if education.end_date %}
+              {{ education.start_date|date:"Y" }} 
+              - {{ education.end_date|date:"Y" }}
+            {% else %}
+              {{ education.start_date|date:"Y" }} - н.в.
+            {% endif %}
+          </div>
+        </div>
+        <div class="education-right">
+          <div class="education-institution">{{ education.institution }}</div>
+          <div class="education-field">{{ education.field_of_study }}</div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>

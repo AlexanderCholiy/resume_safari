@@ -28,11 +28,13 @@
     opacity var(--transition-value),
     visibility var(--transition-value);
   pointer-events: none;
+  color: var(--dark-gray-color);
 }
 
 body.dark .tooltip .tooltip-box {
   background: var(--dark-background-color);
   box-shadow: 0 2px 6px rgba(255, 255, 255, 0.2);
+  color: var(--light-gray-color);
 }
 
 .tooltip.active-tooltip .tooltip-box {

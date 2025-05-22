@@ -9,8 +9,16 @@
   <link 
     rel="stylesheet" href="{% static 'css/resume_detail/resume_card.css' %}">
   <link rel="stylesheet" href="{% static 'css/resume_detail/summary.css' %}">
-  <link rel="stylesheet" href="{% static 'css/resume_detail/skills.css' %}">
-  <link rel="stylesheet" href="{% static 'css/tooltip.css' %}">
+  {% if hard_skills or soft_skills %}
+    <link rel="stylesheet" href="{% static 'css/resume_detail/skills.css' %}">
+    <link rel="stylesheet" href="{% static 'css/tooltip.css' %}">
+  {% endif %}
+  {% if resume.educations.all %}
+    <link rel="stylesheet" href="{% static 'css/resume_detail/education.css' %}">
+  {% endif %}
+  {% if resume.experiences.all %}
+    <link rel="stylesheet" href="{% static 'css/resume_detail/experience.css' %}">
+  {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -22,14 +30,20 @@
       {% include "resume/includes/skills.html" %}
     </section>
   {% endif %}
-  {% if projects %}
+  {% if resume.educations.all %}
+    <section id="education">
+      {% include "resume/includes/education.html" %}
+    </section>
   {% endif %}
-  <section id="education">
-  </section>
-  <section id="experience">
-  </section>
+  {% if resume.experiences.all %}
+    <section id="experience">
+      {% include "resume/includes/experience.html" %}
+    </section>
+  {% endif %}
 {% endblock %}
 
-{% block extra_js %}
-  <script src="{% static 'js/tooltip.js' %}"></script>
-{% endblock %}
+{% if hard_skills or soft_skills %}
+  {% block extra_js %}
+    <script src="{% static 'js/tooltip.js' %}"></script>
+  {% endblock %}
+{% endif %}

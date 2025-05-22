@@ -1,0 +1,95 @@
+#experience .resume-card {
+  display: block;
+}
+
+.experience-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+#experience .resume-card h2 {
+    color: var(--dark-blue-color);
+}
+
+body.dark #experience .resume-card h2 {
+    color: var(--light-red-color);
+}
+
+.experience-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--light-background-color);
+  padding-bottom: 1rem;
+}
+
+body.dark .experience-item {
+  border-color: var(--dark-background-color);
+}
+
+.experience-left,
+.experience-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.experience-left {
+  flex: 0 0 35%;
+}
+
+.experience-right {
+  flex: 0 0 60%;
+}
+
+.experience-position,
+.experience-company {
+  font-weight: 500;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.experience-year {
+  font-size: 0.9rem;
+  color: var(--dark-gray-color);
+}
+
+body.dark .experience-year {
+  color: var(--light-gray-color);
+}
+
+.experience-responsibilities {
+  margin: 0;
+  padding-left: 1.2rem;
+  list-style-type: disc;
+  font-size: 0.95rem;
+  line-height: 1.4rem;
+}
+
+@media (max-width: 768px) {
+  .experience-item {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .experience-left,
+  .experience-right {
+    flex: 100%;
+  }
+
+  .experience-position,
+  .experience-company {
+    text-align: center;
+  }
+
+  .experience-year,
+  .experience-responsibilities {
+    text-align: center;
+  }
+
+  .experience-responsibilities {
+    padding-left: 1rem;
+    text-align: left;
+  }
+}

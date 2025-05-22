@@ -211,11 +211,11 @@ class Education(Timestamp):
         max_length=MAX_INSTITUTION_NAME_LENGTH,
     )
     degree = models.CharField(
-        'Степень',
+        'Степень (курсы)',
         max_length=MAX_EDUCATION_DEGREE_LENGTH,
     )
     field_of_study = models.CharField(
-        'Специальность',
+        'Специальность (направление)',
         max_length=MAX_FIELD_OF_STUDY_LENGTH,
     )
 
@@ -228,6 +228,7 @@ class Education(Timestamp):
                 name='unique_education'
             )
         ]
+        ordering = ('-start_date',)
 
     def __str__(self: 'Education') -> str:
         return (
@@ -256,7 +257,7 @@ class Experience(Timestamp):
         'Обязанности',
         blank=True,
         null=True,
-        help_text='В качестве разделителя используйте ";"',
+        help_text='В качестве разделителя используйте "новую строку"',
     )
 
     class Meta:
@@ -268,6 +269,7 @@ class Experience(Timestamp):
                 name='unique_experience'
             )
         ]
+        ordering = ('-start_date',)
 
     def __str__(self: 'Experience') -> str:
         return f'{self.user.username}: {self.company} - {self.position}'
@@ -340,8 +342,16 @@ class Resume(models.Model):
 
 
 class ResumeExperience(models.Model):
-    resume = models.ForeignKey('Resume', on_delete=models.CASCADE)
-    experience = models.ForeignKey(Experience, on_delete=models.CASCADE)
+    resume = models.ForeignKey(
+        'Resume',
+        on_delete=models.CASCADE,
+        related_name='resume_experiences',
+    )
+    experience = models.ForeignKey(
+        Experience,
+        on_delete=models.CASCADE,
+        related_name='resume_experiences',
+    )
 
     class Meta:
         constraints = [
@@ -353,8 +363,16 @@ class ResumeExperience(models.Model):
 
 
 class ResumeEducation(models.Model):
-    resume = models.ForeignKey('Resume', on_delete=models.CASCADE)
-    education = models.ForeignKey(Education, on_delete=models.CASCADE)
+    resume = models.ForeignKey(
+        'Resume',
+        on_delete=models.CASCADE,
+        related_name='resume_educations',
+    )
+    education = models.ForeignKey(
+        Education,
+        on_delete=models.CASCADE,
+        related_name='resume_educations',
+    )
 
     class Meta:
         constraints = [

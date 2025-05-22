@@ -2,8 +2,10 @@ from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from django.db.models import Prefetch
 
-from .models import Resume, HardSkill, SoftSkill
+from .models import (
+    Resume, HardSkill, SoftSkill, ResumeEducation, ResumeExperience)
 from core.grid import build_grid, grid_contains_any_items
 
 
@@ -23,12 +25,21 @@ def index(request: HttpRequest) -> HttpResponse:
 def resume_detail(request: HttpRequest, slug: str) -> HttpResponse:
     template_name = 'resume/resume_detail.html'
     resume = get_object_or_404(
-        (
-            Resume.objects
-            .select_related('user', 'user__location',)
-            .prefetch_related('educations', 'experiences',)
+        Resume.objects
+        .select_related('user', 'user__location')
+        .prefetch_related(
+            Prefetch(
+                'resume_educations',
+                queryset=ResumeEducation.objects.select_related('education')
+            ),
+            Prefetch(
+                'resume_experiences',
+                queryset=ResumeExperience.objects.select_related('experience')
+            ),
         ),
-        slug=slug, user__is_active=True, is_published=True,
+        slug=slug,
+        user__is_active=True,
+        is_published=True,
     )
 
     hard_skills = build_grid(HardSkill.objects.filter(resume=resume))

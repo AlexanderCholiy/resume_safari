@@ -1,0 +1,30 @@
+<div class="resume-card">
+  <h2>Опыт работы</h2>
+  <div class="experience-list">
+    {% for experience in resume.experiences.all %}
+      <div class="experience-item">
+        <div class="experience-left">
+          <div class="experience-position">{{ experience.position }}</div>
+          <div class="experience-year">
+            {% if experience.end_date %}
+              {{ experience.start_date|date:"M.Y" }} 
+              – {{ experience.end_date|date:"M.Y" }}
+            {% else %}
+              {{ experience.start_date|date:"M.Y" }} – н.в.
+            {% endif %}
+          </div>
+        </div>
+        <div class="experience-right">
+          <div class="experience-company">{{ experience.company }}</div>
+          <ul class="experience-responsibilities">
+            {% for line in experience.responsibilities.splitlines %}
+              {% if line %}
+                <li>{{ line }}</li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
