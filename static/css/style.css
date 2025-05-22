@@ -1,45 +1,3 @@
-@font-face {
-  font-family: 'Bellota';
-  src: url('/static/fonts/Bellota-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Bellota';
-  src: url('/static/fonts/Bellota-Bold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Bellota';
-  src: url('/static/fonts/Bellota-Italic.ttf') format('truetype');
-  font-weight: normal;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Bellota';
-  src: url('/static/fonts/Bellota-BoldItalic.ttf') format('truetype');
-  font-weight: bold;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Bellota';
-  src: url('/static/fonts/Bellota-Light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Bellota';
-  src: url('/static/fonts/Bellota-LightItalic.ttf') format('truetype');
-  font-weight: 300;
-  font-style: italic;
-}
-
 html, body {
     height: 100%;
     margin: 0;
@@ -48,11 +6,18 @@ html, body {
 }
 
 body {
-    font-family: 'Bellota', sans-serif;
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
     font-variation-settings: "wdth" 100;
+}
+
+body.classic-style {
+  font-family: 'Bellota', sans-serif;
+}
+
+body.modern-style {
+  font-family: 'Tektur', sans-serif;
 }
 
 body.light {

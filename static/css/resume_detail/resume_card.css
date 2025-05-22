@@ -14,10 +14,6 @@ body.dark .resume-card {
   background-color: var(--dark-add-background-color);
 }
 
-#default-avatar {
-  transition: opacity var(--transition-value);
-}
-
 @media (max-width: 768px) {
   .resume-card {
     align-items: center;

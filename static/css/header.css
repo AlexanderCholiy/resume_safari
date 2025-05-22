@@ -28,26 +28,33 @@ body.dark header {
 .auth-theme {
     display: flex;
     align-items: center;
+    gap: 1rem;
 }
 
-.theme-toggle {
+.auth-theme button {
     background: none;
     border: none;
     cursor: pointer;
     font-size: 1.5rem;
     color: var(--dark-add-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem;
+    width: 2.5rem;
+    height: 2.5rem;
     /* transition: color var(--transition-value); */
 }
 
-.theme-toggle:hover {
+.auth-theme button:hover{
     color: var(--dark-color);
 }
 
-body.dark .theme-toggle:hover {
+body.dark .auth-theme button {
     color: var(--light-color);
 }
 
-body.dark .theme-toggle {
+body.dark .auth-theme button:hover {
     color: var(--light-add-color);
 }
 
@@ -67,5 +74,11 @@ body.dark .theme-toggle {
         justify-content: center;
         margin-top: 30px;
         margin-bottom: 5px;
+    }
+
+    .auth-theme button {
+        width: 2rem;
+        height: 2rem;
+        font-size: 1.2rem;
     }
 }
