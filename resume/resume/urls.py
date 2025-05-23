@@ -5,6 +5,12 @@ from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib.auth import views
 
+
+handler400 = 'core.views.bad_request'
+handler403 = 'core.views.permission_denied'
+handler404 = 'core.views.page_not_found'
+handler500 = 'core.views.server_error'
+
 urlpatterns = [
     path('', include('user.urls', namespace='user')),
     path('admin/', admin.site.urls),
@@ -63,3 +69,4 @@ if settings.DEBUG:
     urlpatterns += [path('debug/', include(debug_toolbar.urls)),]
     urlpatterns += static(
         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += [path('core/', include('core.urls', namespace='cores')),]

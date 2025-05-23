@@ -11,7 +11,7 @@ SECRET_KEY = WebConfig.SECRET_KEY
 
 DEBUG = True
 
-ALLOWED_HOSTS: list[str] = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost',]
 
 INTERNAL_IPS = ['127.0.0.1', 'localhost',]
 
@@ -127,3 +127,4 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 PASSWORD_RESET_TIMEOUT = WebConfig.EMAIL_PSWD_RESET_TIMEOUT
 LOGIN_REDIRECT_URL = 'user:resume_list'
 LOGIN_URL = 'login'
+CSRF_FAILURE_VIEW = 'core.views.csrf_failure'

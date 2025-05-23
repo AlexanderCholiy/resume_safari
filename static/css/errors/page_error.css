@@ -1,0 +1,86 @@
+.error-body {
+  width: 100%;
+  min-height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
+
+.error-container {
+  max-width: 600px;
+  margin: 3rem auto;
+  background-color: var(--light-background-color);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  transition: background-color var(--transition-value);
+}
+
+body.dark .error-container {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+    background-color: var(--dark-background-color);
+}
+
+.error-container h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--dark-gray-color);
+}
+
+body.dark .error-container h1 {
+  color: var(--light-gray-color);
+}
+
+.error-container p {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.error-link {
+  display: flex;
+  justify-content: right;
+  margin-top: 3rem;
+}
+
+.error-container a {
+  color: var(--light-color);
+  background-color: var(--dark-blue-color);
+  padding: 0.6rem 1.2rem;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  display: inline-block;
+  transition: background-color var(--transition-value);
+}
+
+body.dark .error-container a {
+  color: var(--dark-color);
+  background-color: var(--light-red-color);
+}
+
+.error-container a:hover {
+  background-color: var(--light-blue-color);
+}
+
+body.dark .error-container a:hover {
+  background-color: var(--dark-red-color);
+}
+
+@media (max-width: 768px) {
+  .error-container {
+    padding: 1.5rem;
+  }
+
+  .error-container h1 {
+    font-size: 1.5rem;
+  }
+
+  .error-container p {
+    font-size: 1rem;
+  }
+
+  .error-container a {
+    padding: 0.5rem 1rem;
+  }
+}
