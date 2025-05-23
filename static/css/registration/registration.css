@@ -1,0 +1,173 @@
+.auth-container {
+  width: 100%;
+  min-height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
+
+.auth-wrapper {
+  max-width: 600px;
+  margin: 3rem auto;
+  background-color: var(--light-background-color);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  transition: background-color var(--transition-value);
+}
+
+body.dark .auth-wrapper {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+    background-color: var(--dark-background-color);
+}
+
+.auth-wrapper h1,
+.auth-wrapper h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.auth-wrapper p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.auth-wrapper form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-wrapper .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-wrapper input[type="text"],
+.auth-wrapper input[type="email"],
+.auth-wrapper input[type="password"] {
+  padding: 0.5rem;
+  border: 1px solid var(--light-gray-color);
+  border-radius: 0.5rem;
+  color: var(--dark-add-color);
+  background-color: var(--light-add-background-color);
+}
+
+body.dark .auth-wrapper input[type="text"],
+body.dark .auth-wrapper input[type="email"],
+body.dark .auth-wrapper input[type="password"] {
+    border-color: var(--dark-gray-color);
+    color: var(--light-add-color);
+    background-color: var(--dark-add-background-color);
+}
+
+.auth-wrapper button {
+  padding: 0.5rem;
+  background-color: var(--dark-blue-color);
+  color: var(--light-color);
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color var(--transition-value);
+}
+
+body.dark .auth-wrapper button {
+    background-color: var(--light-red-color);
+    color: var(--dark-color);
+}
+
+.auth-wrapper button:hover {
+  background-color: var(--light-blue-color);
+}
+
+body.dark .auth-wrapper button:hover {
+  background-color: var(--dark-red-color);
+}
+
+.form-errors {
+  background-color: var(--light-add-background-color);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+body.dark .form-errors {
+    background-color: var(--dark-add-background-color);
+}
+
+.form-errors ul {
+  padding-left: 1.2rem;
+  margin: 0.5rem 0 0;
+  list-style-type: disc;
+  text-align: left;
+}
+
+.form-errors li {
+  margin-bottom: 0.5rem;
+}
+
+.password_reset {
+  color: var(--light-gray-color);
+}
+
+.login-link {
+  color: var(--dark-blue-color);
+}
+
+.login-link:hover,
+.password_reset:hover {
+    color: var(--light-blue-color);
+}
+
+body.dark .password_reset {
+    color: var(--dark-gray-color);
+}
+
+body.dark .login-link {
+  color: var(--light-red-color);
+}
+
+body.dark .login-link:hover,
+body.dark .password_reset:hover {
+    color: var(--dark-red-color);
+}
+
+.auth-wrapper .helptext {
+  color: var(--dark-gray-color);
+}
+
+body.dark .auth-wrapper .helptext {
+  color: var(--light-gray-color);
+}
+
+.auth-wrapper span.helptext {
+  font-size: small;
+}
+
+
+@media (max-width: 768px) {
+  .auth-wrapper {
+    margin: 1rem;
+    padding: 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  .auth-wrapper h1,
+  .auth-wrapper h2 {
+    font-size: 1.25rem;
+  }
+
+  .auth-wrapper button {
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+
+  .form-group label {
+    font-size: 0.95rem;
+  }
+
+  .auth-wrapper input {
+    font-size: 0.95rem;
+  }
+}

@@ -13,6 +13,7 @@ from user.models import User
 
 
 def register(request: HttpRequest) -> HttpResponse:
+    context = {'auth_page': True}
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
@@ -42,10 +43,13 @@ def register(request: HttpRequest) -> HttpResponse:
                 settings.DEFAULT_FROM_EMAIL,
                 [user.email]
             )
-            return render(request, 'registration/email_confirmation_sent.html')
+            return render(
+                request, 'registration/email_confirmation_sent.html', context)
     else:
         form = CustomUserCreationForm()
-    return render(request, 'registration/register.html', {'form': form})
+
+    context['form'] = form
+    return render(request, 'registration/register.html', context)
 
 
 def activate(request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
@@ -55,9 +59,10 @@ def activate(request: HttpRequest, uidb64: str, token: str) -> HttpResponse:
     except Exception:
         user = None
 
+    context = {'auth_page': True}
     if user and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        return render(request, 'registration/activation_success.html')
+        return render(request, 'registration/activation_success.html', context)
     else:
-        return render(request, 'registration/activation_invalid.html')
+        return render(request, 'registration/activation_invalid.html', context)

@@ -46,6 +46,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/loader.css' %}">
     <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/auth_toggle.css' %}">
     <link rel="stylesheet" href="{% static 'css/main_nav.css' %}">
     <link rel="stylesheet" href="{% static 'css/footer.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
@@ -57,8 +58,8 @@
         <div class="spinner"></div>
       </div>
       {% include "includes/header.html" %}
-      <main>
-        <div class="main-wrapper">
+      <main class="{% if auth_page %}auth-container{% endif %}">
+        <div class="main-wrapper {% if auth_page %}auth-wrapper{% endif %}">
           {% block content %}Контента пока нет :({% endblock %}
         </div>
       </main>
@@ -68,6 +69,7 @@
     <script src="{% static 'js/loader.js' %}"></script>
     <script src="{% static 'js/theme_toggle.js' %}"></script>
     <script src="{% static 'js/style_toggle.js' %}"></script>
+    <script src="{% static 'js/auth_toggle.js' %}"></script>
     <script src="{% static 'js/scroll_to_top.js' %}"></script>
     {% block extra_js %}{% endblock %}
   </body>

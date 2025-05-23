@@ -17,55 +17,46 @@
     <button id="theme-toggle" title="Переключить тему" class="theme-toggle">
       <i id="theme-icon" class="bx bx-sun"></i>
     </button>
-
     <button id="style-toggle" title="Переключить стиль" class="style-toggle">
       <i id="style-icon" class="bx bx-font"></i>
     </button>
 
     <button id="auth-toggle" class="auth-toggle" title="Меню">
-      <i class='bx bx-menu-wide'></i>
+      <i class='bx bx-menu'></i>
     </button>
 
+    {% with request.resolver_match.view_name as view_name %}
     <div class="auth" id="auth-menu">
       <ul class="nav-list">
         {% if user.is_authenticated and user.is_active %}
           <li class="nav-item">
-            <a 
-              class="nav-link{% if view_name == 'password_change' %} active{% endif %}" 
-              href="{% url 'password_change' %}"
-            >
+            <a class="nav-link{% if view_name == 'password_change' %} active{% endif %}"
+              href="{% url 'password_change' %}">
               Изменить пароль
             </a>
           </li>
           <li class="nav-item">
-            <a 
-              class="nav-link" 
-              href="{% url 'logout' %}" 
-              title="{{ user.username }}"
-            >
+            <a class="nav-link" href="{% url 'logout' %}" title="{{ user.username }}">
               Выйти
             </a>
           </li>
         {% else %}
           <li class="nav-item">
-            <a 
-              class="nav-link{% if view_name == 'login' %} active{% endif %}" 
-              href="{% url 'login' %}"
-            >
+            <a class="nav-link{% if view_name == 'login' %} active{% endif %}"
+              href="{% url 'login' %}">
               Войти
             </a>
           </li>
           <li class="nav-item">
-            <a 
-              class="nav-link{% if view_name == 'services:register' %} active{% endif %}" 
-              href="{% url 'services:register' %}"
-            >
+            <a class="nav-link{% if view_name == 'services:register' %} active{% endif %}"
+              href="{% url 'services:register' %}">
               Регистрация
             </a>
           </li>
         {% endif %}
       </ul>
     </div>
+    {% endwith %}
   </div>
 
 </header>

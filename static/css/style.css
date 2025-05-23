@@ -12,11 +12,11 @@ body {
     font-variation-settings: "wdth" 100;
 }
 
-body.classic-style {
+body.classic-style * {
   font-family: 'Bellota', sans-serif;
 }
 
-body.modern-style {
+body.modern-style * {
   font-family: 'Tektur', sans-serif;
 }
 

@@ -12,42 +12,48 @@ urlpatterns = [
     path('auth/', include('services.urls', namespace='services')),
     path(
         'login/',
-        views.LoginView.as_view(),
+        views.LoginView.as_view(extra_context={'auth_page': True}),
         name='login',
     ),
     path(
         'logout/',
-        views.LogoutView.as_view(),
+        views.LogoutView.as_view(
+            next_page='login',
+            extra_context={'auth_page': True}
+        ),
         name='logout',
     ),
     path(
         'password_change/',
-        views.PasswordChangeView.as_view(),
+        views.PasswordChangeView.as_view(extra_context={'auth_page': True}),
         name='password_change',
     ),
     path(
         'password_change/done/',
-        views.PasswordChangeDoneView.as_view(),
+        views.PasswordChangeDoneView.as_view(
+            extra_context={'auth_page': True}),
         name='password_change_done',
     ),
     path(
         'password_reset/',
-        views.PasswordResetView.as_view(),
+        views.PasswordResetView.as_view(extra_context={'auth_page': True}),
         name='password_reset',
     ),
     path(
         'password_reset/done/',
-        views.PasswordResetDoneView.as_view(),
+        views.PasswordResetDoneView.as_view(extra_context={'auth_page': True}),
         name='password_reset_done',
     ),
     path(
         'reset/<uidb64>/<token>/',
-        views.PasswordResetConfirmView.as_view(),
+        views.PasswordResetConfirmView.as_view(
+            extra_context={'auth_page': True}),
         name='password_reset_confirm',
     ),
     path(
         'reset/done/',
-        views.PasswordResetCompleteView.as_view(),
+        views.PasswordResetCompleteView.as_view(
+            extra_context={'auth_page': True}),
         name='password_reset_complete',
     ),
 ]
