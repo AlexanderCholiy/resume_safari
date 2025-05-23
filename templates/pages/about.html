@@ -1,7 +1,35 @@
 {% extends "base.html" %} 
-{% block title %} 
-  О проекте 
-{% endblock %} 
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/pages/about.css' %}">
+{% endblock %}
+
 {% block content %} 
-  <h1>О проекте</h1>  
+<div class="about-container">
+  <h1 class="about-title">Resume Safari</h1>
+  <p class="about-paragraph">
+    Этот сайт — мой личный <strong>pet-проект</strong>, разработанный с использованием <strong>Django</strong>.
+    Он представляет собой платформу, где пользователи могут публиковать свои <strong>резюме</strong>,
+    а также просматривать резюме других пользователей.
+  </p>
+
+  <p class="about-paragraph">
+    Зарегистрированные пользователи могут добавлять, редактировать и удалять свои резюме через удобный REST API.
+    Вся логика API реализована с помощью <strong>Django REST Framework</strong>, обеспечивая гибкий и масштабируемый подход к управлению данными.
+  </p>
+
+  <p class="about-paragraph">
+    Основной интерфейс сайта ориентирован на просмотр резюме, а взаимодействие с личными данными осуществляется через API.
+    Это позволяет легко интегрировать сайт с внешними frontend-интерфейсами или мобильными приложениями.
+  </p>
+
+  <p class="about-paragraph">
+    Проект создавался с целью практики и углубления знаний в области веб-разработки, а также в работе с REST API и авторизацией пользователей.
+  </p>
+
+  <p class="about-paragraph">
+    Ссылка на документацию API: <a href="/api/" class="about-link">/api/</a>
+  </p>
+</div> 
 {% endblock %}

@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'user.apps.UserConfig',
     'pages.apps.PagesConfig',
+    'services.apps.ServicesConfig',
 ]
 
 MIDDLEWARE = [
@@ -124,3 +125,5 @@ EMAIL_HOST_USER = WebConfig.EMAIL_LOGIN
 EMAIL_HOST_PASSWORD = WebConfig.EMAIL_PSWD
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 PASSWORD_RESET_TIMEOUT = WebConfig.EMAIL_PSWD_RESET_TIMEOUT
+LOGIN_REDIRECT_URL = 'user:resume_list'
+LOGIN_URL = 'login'

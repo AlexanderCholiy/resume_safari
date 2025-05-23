@@ -1,10 +1,11 @@
 from django.views.generic import ListView, DetailView
 from django.contrib.auth import get_user_model
 from django.db.models import Prefetch, QuerySet
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import (
     Resume, HardSkill, SoftSkill, ResumeEducation, ResumeExperience)
-from core.grid import build_grid, grid_contains_any_items
+from core.utils import build_grid, grid_contains_any_items
 from .constants import MAX_RESUMES_PER_PAGE
 
 
@@ -20,6 +21,21 @@ class ResumeListView(ListView):
         return (
             Resume.objects
             .filter(user__is_active=True, is_published=True)
+            .select_related('user', 'user__location')
+            .order_by('-created_at', 'pk')
+        )
+
+
+class MyResumeListView(LoginRequiredMixin, ListView):
+    model = Resume
+    template_name = 'resume/index.html'
+    paginate_by = MAX_RESUMES_PER_PAGE
+    login_url = 'login'
+
+    def get_queryset(self: 'MyResumeListView') -> QuerySet:
+        return (
+            Resume.objects
+            .filter(user=self.request.user)
             .select_related('user', 'user__location')
             .order_by('-created_at', 'pk')
         )

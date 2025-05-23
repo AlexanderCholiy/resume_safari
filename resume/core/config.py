@@ -45,7 +45,9 @@ class WebConfig(Config):
     EMAIL_LOGIN: Optional[str] = os.getenv('WEB_EMAIL_LOGIN')
     EMAIL_PSWD: Optional[str] = os.getenv('WEB_EMAIL_PSWD')
     EMAIL_PSWD_RESET_TIMEOUT: int = int(
-        os.getenv('WEB_EMAIL_PSWD_RESET_TIMEOUT', 14400))
+        os.getenv('WEB_EMAIL_PSWD_RESET_TIMEOUT'))
+    EMAIL_LOGIN_RESET_TIMEOUT: int = int(
+        os.getenv('WEB_EMAIL_LOGIN_RESET_TIMEOUT'))
 
     MEDIA_DIR: str = os.path.join(ROOT_DIR, 'media')
     TEMPLATES_DIR: str = os.path.join(ROOT_DIR, 'templates',)

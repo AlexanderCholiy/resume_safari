@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function getSavedStyle() {
-    return localStorage.getItem('style') || 'classic';
+    return localStorage.getItem('style') || 'modern';
   }
 
   function setStyle(style) {

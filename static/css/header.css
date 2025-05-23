@@ -25,13 +25,13 @@ body.dark header {
     object-fit: contain;
 }
 
-.auth-theme {
+.theme-style-auth {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-.auth-theme button {
+.theme-style-auth button {
     background: none;
     border: none;
     cursor: pointer;
@@ -46,15 +46,15 @@ body.dark header {
     /* transition: color var(--transition-value); */
 }
 
-.auth-theme button:hover{
+.theme-style-auth button:hover{
     color: var(--dark-color);
 }
 
-body.dark .auth-theme button {
+body.dark .theme-style-auth button {
     color: var(--light-color);
 }
 
-body.dark .auth-theme button:hover {
+body.dark .theme-style-auth button:hover {
     color: var(--light-add-color);
 }
 
@@ -70,13 +70,13 @@ body.dark .auth-theme button:hover {
         justify-content: center;
     }
 
-    .auth-theme {
+    .theme-style-auth {
         justify-content: center;
         margin-top: 30px;
         margin-bottom: 5px;
     }
 
-    .auth-theme button {
+    .theme-style-auth button {
         width: 2rem;
         height: 2rem;
         font-size: 1.2rem;

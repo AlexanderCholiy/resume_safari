@@ -1,25 +1,35 @@
 <nav class="main-nav">
 <ul>
     {% with request.resolver_match.view_name as view_name %}
-    <li>
-    <a 
+      <li>
+      <a 
         href="{% url 'user:resume_list' %}"
         class="nav-link 
         {% if view_name  == 'user:resume_list' %}active{% endif %}"
         >
         Главная
-    </a>
-    </li>
-    <li><a href="#skills">Мои резюме</a></li>
-    <li>
-    <a
+      </a>
+      </li>
+      {% if user.is_authenticated and user.is_active %}
+        <li>
+          <a 
+            href="{% url 'user:resume_my_list' %}"
+            class="nav-link 
+            {% if view_name  == 'user:resume_my_list' %}active{% endif %}"
+            >
+            Мои резюме
+          </a>
+        </li>    
+      {% endif %}
+      <li>
+      <a
         href="{% url 'pages:about' %}"
         class="nav-link
         {% if view_name  == 'pages:about' %}active{% endif %}"
         >
         О проекте
-    </a>
-    </li>
+      </a>
+      </li>
     {% endwith %}
 </ul>
 </nav>
