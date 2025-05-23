@@ -52,6 +52,9 @@ class WebConfig(Config):
     MEDIA_DIR: str = os.path.join(ROOT_DIR, 'media')
     TEMPLATES_DIR: str = os.path.join(ROOT_DIR, 'templates',)
     STATIC_DIR: str = os.path.join(ROOT_DIR, 'static')
+    DATA_DIR: str = os.path.join(ROOT_DIR, 'data')
+
+    DATA_2_DB_PATH: str = os.path.join(DATA_DIR, 'data_2_db.xlsx')
 
     @staticmethod
     def validate() -> None:
@@ -61,5 +64,10 @@ class WebConfig(Config):
             'WEB_EMAIL_LOGIN': WebConfig.EMAIL_LOGIN,
             'WEB_EMAIL_PSWD': WebConfig.EMAIL_PSWD,
         })
-        WebConfig().check_dirs([WebConfig.MEDIA_DIR, WebConfig.TEMPLATES_DIR])
-        WebConfig().check_files([ENV_PATH])
+        WebConfig().check_dirs([
+            WebConfig.MEDIA_DIR,
+            WebConfig.TEMPLATES_DIR,
+            WebConfig.STATIC_DIR,
+            WebConfig.DATA_DIR,
+        ])
+        WebConfig().check_files([ENV_PATH, WebConfig.DATA_2_DB_PATH])
