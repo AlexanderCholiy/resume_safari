@@ -2,7 +2,6 @@ import argparse
 
 import pandas as pd
 from django.core.management.base import BaseCommand
-from django.db import transaction
 from colorama import init
 
 from user.models import Location, HardSkillName, SoftSkillName
