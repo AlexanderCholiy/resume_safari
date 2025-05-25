@@ -30,15 +30,13 @@ class Command(BaseCommand):
         locations: bool | None = options['locations']
         hard_skills: bool | None = options['hard_skills']
         soft_skills: bool | None = options['soft_skills']
-        if not any((locations, hard_skills, soft_skills,)):
-            raise ValueError(
-                'Укажите один или несколько доступных параметров.'
-            )
-        if locations:
+        run_all = not any((locations, hard_skills, soft_skills,))
+
+        if locations or run_all:
             self.import_locations()
-        if hard_skills:
+        if hard_skills or run_all:
             self.import_skills(HardSkillName, 'HardSkills')
-        if soft_skills:
+        if soft_skills or run_all:
             self.import_skills(SoftSkillName, 'SoftSkills')
 
     @execution_time
