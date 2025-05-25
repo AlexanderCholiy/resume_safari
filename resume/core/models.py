@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError
 
 from .constants import (
     MAX_GRID_SIZE_X,
@@ -48,6 +49,42 @@ class Skill(models.Model):
 
     def __str__(self: 'Skill') -> str:
         return self.name
+
+    def clean(self: 'Skill') -> None:
+        super().clean()
+        cls = self.__class__
+        # Для SQLite лучше использовать __iregex для работы с кирилецей.
+        if (
+            cls.objects
+            .filter(name__iregex=rf'^\s*{self.name}\s*$')
+            .exclude(pk=self.pk).exists()
+        ):
+            raise ValidationError({
+                'name': (
+                    f'{cls._meta.verbose_name.capitalize()} с названием '
+                    f'"{self.name}" уже существует (без учёта регистра).'
+                )
+            })
+
+    @classmethod
+    def update_or_create_normalized(
+        cls: 'Skill', name: str, description: str = None
+    ) -> tuple['Skill', bool]:
+        existing_skill = (
+            cls.objects.filter(name__iregex=rf'^\s*{name}\s*$').first()
+        )
+
+        if existing_skill:
+            existing_skill.name = name
+            existing_skill.description = description
+            existing_skill.full_clean()
+            existing_skill.save()
+            return existing_skill, False
+        else:
+            skill = cls(name=name, description=description)
+            skill.full_clean()
+            skill.save()
+            return skill, True
 
 
 class Timestamp(models.Model):

@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.text import slugify
 from unidecode import unidecode
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 from core.models import Grid, Skill, Timestamp
 from .constants import (
@@ -116,6 +117,46 @@ class Location(models.Model):
 
     def __str__(self: 'Location') -> str:
         return f'г. {self.city} ({self.country})'
+
+    def clean(self: 'Location') -> None:
+        super().clean()
+        # Для SQLite лучше использовать __iregex для работы с кирилецей.
+        if (
+            Location.objects
+            .filter(
+                country__iregex=rf'^\s*{self.country}\s*$',
+                city__iregex=rf'^\s*{self.city}\s*$'
+            )
+            .exclude(pk=self.pk)
+            .exists()
+        ):
+            raise ValidationError({
+                'country_city': (
+                    f'Локация с такой страной "{self.country}" и городом '
+                    f'"{self.city}" уже существует (без учёта регистра).'
+                )
+            })
+
+    @classmethod
+    def update_or_create_normalized(
+        cls: 'Location', country: str, city: str
+    ) -> tuple['Location', bool]:
+        existing_location = cls.objects.filter(
+            country__iregex=rf'^\s*{country}\s*$',
+            city__iregex=rf'^\s*{city}\s*$'
+        ).first()
+
+        if existing_location:
+            existing_location.country = country
+            existing_location.city = city
+            existing_location.full_clean()
+            existing_location.save()
+            return existing_location, False
+        else:
+            location = cls(country=country, city=city)
+            location.full_clean()
+            location.save()
+            return location, True
 
 
 class HardSkillName(Skill):
