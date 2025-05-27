@@ -7,19 +7,20 @@ from .constants import (
     MAX_GRID_SIZE_Y,
     MAX_SKILL_DESCRIPTION_LENGTH,
     MAX_SKILL_NAME_LENGTH,
+    DEFAULT_GRID_ROW_AND_COLUMN,
 )
 
 
 class Grid(models.Model):
     grid_row = models.PositiveIntegerField(
         'Строка',
-        default=1,
+        default=DEFAULT_GRID_ROW_AND_COLUMN,
         validators=[MinValueValidator(1), MaxValueValidator(MAX_GRID_SIZE_Y)],
         help_text='Номер строки в HTML-сетке для отображения этого навыка',
     )
     grid_column = models.PositiveIntegerField(
         'Столбец',
-        default=1,
+        default=DEFAULT_GRID_ROW_AND_COLUMN,
         validators=[MinValueValidator(1), MaxValueValidator(MAX_GRID_SIZE_X)],
         help_text='Номер столбца в HTML-сетке для отображения этого навыка',
     )

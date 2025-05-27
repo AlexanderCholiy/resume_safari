@@ -90,7 +90,20 @@ class User(AbstractUser):
         verbose_name_plural = 'Пользователи'
 
     def __str__(self: 'User') -> str:
-        return self.get_full_name()
+        return self.username
+
+    def clean(self: 'User') -> None:
+        super().clean()
+        if self.phone:
+            phone = self.phone
+            if (
+                not phone.startswith('7')
+                or len(phone) != 11
+                or not phone.isdigit()
+            ):
+                raise ValidationError({
+                    'phone': 'Телефон должен быть в формате 7xxxxxxxxxx'
+                })
 
 
 class Location(models.Model):
@@ -131,7 +144,7 @@ class Location(models.Model):
             .exists()
         ):
             raise ValidationError({
-                'country_city': (
+                'country': (
                     f'Локация с такой страной "{self.country}" и городом '
                     f'"{self.city}" уже существует (без учёта регистра).'
                 )
@@ -200,10 +213,7 @@ class HardSkill(Grid):
         ordering = ('grid_row', 'grid_column', 'updated_at',)
 
     def __str__(self: 'HardSkill') -> str:
-        return (
-            f'{self.skill.name} - {self.resume.user.username} '
-            f'({self.resume.position})'
-        )
+        return f'{self.skill} - {self.resume}'
 
 
 class SoftSkill(Grid):
@@ -233,10 +243,7 @@ class SoftSkill(Grid):
         ordering = ('grid_row', 'grid_column', 'updated_at',)
 
     def __str__(self: 'SoftSkill') -> str:
-        return (
-            f'{self.skill.name} - {self.resume.user.username} '
-            f'({self.resume.position})'
-        )
+        return f'{self.skill} - {self.resume}'
 
 
 class Education(Timestamp):
@@ -273,7 +280,7 @@ class Education(Timestamp):
 
     def __str__(self: 'Education') -> str:
         return (
-            f'{self.user.username}: '
+            f'{self.user}: '
             f'{self.institution} - {self.degree} - {self.field_of_study}'
         )
 
@@ -313,7 +320,7 @@ class Experience(Timestamp):
         ordering = ('-start_date',)
 
     def __str__(self: 'Experience') -> str:
-        return f'{self.user.username}: {self.company} - {self.position}'
+        return f'{self.user}: {self.company} - {self.position}'
 
 
 class Resume(models.Model):
@@ -373,7 +380,7 @@ class Resume(models.Model):
         ordering = ('-created_at',)
 
     def __str__(self: 'Resume') -> str:
-        return f'{self.user.username}: {self.position}'
+        return f'{self.user}: {self.position}'
 
     def save(self: 'Resume', *args: tuple, **kwargs: dict) -> None:
         if not self.slug:
@@ -384,7 +391,7 @@ class Resume(models.Model):
 
 class ResumeExperience(models.Model):
     resume = models.ForeignKey(
-        'Resume',
+        Resume,
         on_delete=models.CASCADE,
         related_name='resume_experiences',
     )
@@ -405,7 +412,7 @@ class ResumeExperience(models.Model):
 
 class ResumeEducation(models.Model):
     resume = models.ForeignKey(
-        'Resume',
+        Resume,
         on_delete=models.CASCADE,
         related_name='resume_educations',
     )

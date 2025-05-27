@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.core.handlers.wsgi import WSGIRequest
+from django.db.models.query import QuerySet
 
 from .models import (
     User, HardSkill, SoftSkill, Resume, Education, Experience, Location,
@@ -42,6 +43,12 @@ class UserAdmin(admin.ModelAdmin):
     )
     autocomplete_fields = ('location',)
 
+    def get_queryset(
+        self: 'UserAdmin', request: WSGIRequest
+    ) -> QuerySet:
+        queryset = super().get_queryset(request)
+        return queryset.select_related('location',)
+
 
 @admin.register(Location)
 class LocatiomAdmin(admin.ModelAdmin):
@@ -77,6 +84,12 @@ class SoftSkillAdmin(admin.ModelAdmin):
     autocomplete_fields = ('skill', 'resume',)
     list_per_page = MAX_SKILLS_PER_PAGE
 
+    def get_queryset(
+        self: 'SoftSkillAdmin', request: WSGIRequest
+    ) -> QuerySet:
+        queryset = super().get_queryset(request)
+        return queryset.select_related('skill', 'resume', 'resume__user')
+
 
 @admin.register(HardSkill)
 class HardSkillAdmin(admin.ModelAdmin):
@@ -86,6 +99,12 @@ class HardSkillAdmin(admin.ModelAdmin):
     list_editable = ('grid_row', 'grid_column',)
     autocomplete_fields = ('skill', 'resume',)
     list_per_page = MAX_SKILLS_PER_PAGE
+
+    def get_queryset(
+        self: 'HardSkillAdmin', request: WSGIRequest
+    ) -> QuerySet:
+        queryset = super().get_queryset(request)
+        return queryset.select_related('skill', 'resume', 'resume__user')
 
 
 @admin.register(Education)
@@ -103,6 +122,12 @@ class EducationAdmin(admin.ModelAdmin):
     list_per_page = MAX_EDUCATIONS_PER_PAGE
     autocomplete_fields = ('user',)
 
+    def get_queryset(
+        self: 'EducationAdmin', request: WSGIRequest
+    ) -> QuerySet:
+        queryset = super().get_queryset(request)
+        return queryset.select_related('user',)
+
 
 @admin.register(Experience)
 class ExperienceAdmin(admin.ModelAdmin):
@@ -118,6 +143,12 @@ class ExperienceAdmin(admin.ModelAdmin):
     list_editable = ('company', 'position',)
     list_per_page = MAX_EXPERIANCE_PER_PAGE
     autocomplete_fields = ('user',)
+
+    def get_queryset(
+        self: 'EducationAdmin', request: WSGIRequest
+    ) -> QuerySet:
+        queryset = super().get_queryset(request)
+        return queryset.select_related('user',)
 
 
 class BaseResumeInline(admin.StackedInline):
@@ -166,6 +197,13 @@ class ExperienceInline(BaseResumeInline):
     foreign_key_field = 'experience'
     related_model = Experience
 
+    def get_queryset(
+        self: 'HardSkillInline', request: WSGIRequest
+    ) -> QuerySet:
+        queryset = super().get_queryset(request)
+        return queryset.select_related(
+            'resume', 'experience', 'experience__user', 'resume__user')
+
 
 class EducationInline(BaseResumeInline):
     model = ResumeEducation
@@ -173,17 +211,36 @@ class EducationInline(BaseResumeInline):
     foreign_key_field = 'education'
     related_model = Education
 
+    def get_queryset(
+        self: 'HardSkillInline', request: WSGIRequest
+    ) -> QuerySet:
+        queryset = super().get_queryset(request)
+        return queryset.select_related(
+            'resume', 'education', 'education__user', 'resume__user')
+
 
 class HardSkillInline(admin.TabularInline):
     model = HardSkill
     extra = 1
     autocomplete_fields = ('skill',)
 
+    def get_queryset(
+        self: 'HardSkillInline', request: WSGIRequest
+    ) -> QuerySet:
+        queryset = super().get_queryset(request)
+        return queryset.select_related('skill', 'resume', 'resume__user')
+
 
 class SoftSkillInline(admin.TabularInline):
     model = SoftSkill
     extra = 1
     autocomplete_fields = ('skill',)
+
+    def get_queryset(
+        self: 'SoftSkillInline', request: WSGIRequest
+    ) -> QuerySet:
+        queryset = super().get_queryset(request)
+        return queryset.select_related('skill', 'resume', 'resume__user')
 
 
 @admin.register(Resume)
@@ -205,3 +262,10 @@ class ResumeAdmin(admin.ModelAdmin):
         HardSkillInline,
         SoftSkillInline,
     )
+
+    def get_queryset(self: 'ResumeAdmin', request: WSGIRequest) -> QuerySet:
+        return (
+            super().get_queryset(request)
+            .prefetch_related('educations', 'experiences',)
+            .select_related('user')
+        )

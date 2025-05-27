@@ -16,9 +16,9 @@ body.dark .resume-info h2 {
 .position-age {
   display: flex;
   justify-content: space-between;
-  font-size: 1rem;
+  font-size: 1.2rem;
   margin: 0.5rem 0 1rem;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .position-age p:first-child {
@@ -90,7 +90,7 @@ body.dark .github-telegram a {
 }
 
 body.dark .github-telegram a:hover {
-  color: var(--light-blue-color);
+  color: var(--light-red-color);
 }
 
 @media (max-width: 768px) {

@@ -1,12 +1,11 @@
 from django.views.generic import ListView, DetailView
 from django.contrib.auth import get_user_model
-from django.db.models import Prefetch, QuerySet
+from django.db.models import QuerySet
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import (
-    Resume, HardSkill, SoftSkill, ResumeEducation, ResumeExperience)
-from core.utils import build_grid, grid_contains_any_items
+from .models import Resume, HardSkill, SoftSkill
 from .constants import MAX_RESUMES_PER_PAGE
+from core.utils import build_grid, grid_contains_any_items
 
 
 User = get_user_model()
@@ -49,19 +48,8 @@ class ResumeDetailView(DetailView):
     def get_queryset(self: 'ResumeDetailView') -> QuerySet[Resume]:
         base_qs = (
             Resume.objects
+            .prefetch_related('educations', 'experiences')
             .select_related('user', 'user__location')
-            .prefetch_related(
-                Prefetch(
-                    'resume_educations',
-                    queryset=ResumeEducation.objects.select_related(
-                        'education')
-                ),
-                Prefetch(
-                    'resume_experiences',
-                    queryset=ResumeExperience.objects.select_related(
-                        'experience')
-                ),
-            )
         )
 
         if self.request.user.is_authenticated:

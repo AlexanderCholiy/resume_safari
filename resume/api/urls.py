@@ -14,9 +14,10 @@ router.register(
 router.register(
     r'locations', views.LocationViewSet, basename='location')
 router.register(
-    r'educations', views.EducationViewSet, basename='education')
+    r'users', views.UserViewSet, basename='user'
+)
 router.register(
-    r'user', views.UserViewSet, basename='user'
+    r'resumes', views.ResumeViewSet, basename='resume'
 )
 
 urlpatterns = [

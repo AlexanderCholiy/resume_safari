@@ -28,9 +28,12 @@
       </p>
     {% endif %}
     {% if resume.user.phone %}
-      <p class="contact">
-        <i class='bx bxs-phone'></i>{{ resume.user.phone }}
-      </p>
+      {% with p=resume.user.phone %}
+        <p class="contact">
+          <i class='bx bxs-phone'></i> 
+          +7 ({{ p|slice:"1:4" }}) {{ p|slice:"4:7" }} {{ p|slice:"7:9" }} {{ p|slice:"9:11" }}
+        </p>
+      {% endwith %}
     {% endif %}
     {% if resume.user.email %}
       <p class="contact">
@@ -39,15 +42,6 @@
     {% endif %}
     {% if resume.user.git_hub_link or resume.user.telegram_id %}
       <p class="contact github-telegram">
-        {% if resume.user.telegram_id %}
-          <a 
-            href="https://t.me/{{ resume.user.telegram_id }}"
-            target="_blank"
-            aria-label="Telegram"
-          >
-            <i class="bx bxl-telegram"></i>
-          </a>
-        {% endif %}
         {% if resume.user.git_hub_link %}
           <a 
             href="{{ resume.user.git_hub_link }}"
@@ -55,6 +49,15 @@
             aria-label="GitHub"
           >
             <i class="bx bxl-github"></i>
+          </a>
+        {% endif %}
+        {% if resume.user.telegram_id %}
+          <a 
+            href="https://t.me/{{ resume.user.telegram_id }}"
+            target="_blank"
+            aria-label="Telegram"
+          >
+            <i class="bx bxl-telegram"></i>
           </a>
         {% endif %}
       </p>

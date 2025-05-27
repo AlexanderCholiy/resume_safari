@@ -4,38 +4,39 @@ from user.models import (
     HardSkillName,
     SoftSkillName,
     Location,
-    Education,
     User,
+    Resume,
 )
 from .serializers import (
     HardSkillNameSerializer,
     SoftSkillNameSerializer,
     LocationSerializer,
-    EducationSerializer,
     UserSerializer,
+    ResumeSerializer,
 )
 
 
-class HardSkillNameViewSet(viewsets.ReadOnlyModelViewSet):
+class HardSkillNameViewSet(viewsets.ModelViewSet):
     queryset = HardSkillName.objects.all()
     serializer_class = HardSkillNameSerializer
 
 
-class SoftSkillNameViewSet(viewsets.ReadOnlyModelViewSet):
+class SoftSkillNameViewSet(viewsets.ModelViewSet):
     queryset = SoftSkillName.objects.all()
     serializer_class = SoftSkillNameSerializer
 
 
-class LocationViewSet(viewsets.ReadOnlyModelViewSet):
+class LocationViewSet(viewsets.ModelViewSet):
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
-
-
-class EducationViewSet(viewsets.ModelViewSet):
-    queryset = Education.objects.all()
-    serializer_class = EducationSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class ResumeViewSet(viewsets.ModelViewSet):
+    lookup_field = 'slug'
+    queryset = Resume.objects.all()
+    serializer_class = ResumeSerializer
