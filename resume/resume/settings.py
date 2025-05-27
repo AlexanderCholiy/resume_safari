@@ -23,9 +23,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
+    'rest_framework',
     'user.apps.UserConfig',
     'pages.apps.PagesConfig',
     'services.apps.ServicesConfig',
+    'api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [
@@ -105,13 +107,15 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_URL = 'static/'
-
-STATICFILES_DIRS = [WebConfig.STATIC_DIR]
+AUTH_USER_MODEL = 'user.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'user.User'
+STATIC_URL = '/static-backend/'
+
+STATICFILES_DIRS = [WebConfig.STATIC_DIR]
+
+STATIC_ROOT = WebConfig.STATIC_ROOT
 
 MEDIA_URL = '/media-backend/'
 

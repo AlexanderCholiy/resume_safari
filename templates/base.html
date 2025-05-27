@@ -65,7 +65,13 @@
       </main>
       {% include "includes/footer.html" %}
     </div>
-    
+
+    <script>
+      window.STYLE_FONTS = {
+        classic: "{% static 'css/fonts_classic.css' %}",
+        modern: "{% static 'css/fonts_modern.css' %}"
+      };
+    </script>
     <script src="{% static 'js/loader.js' %}"></script>
     <script src="{% static 'js/theme_toggle.js' %}"></script>
     <script src="{% static 'js/style_toggle.js' %}"></script>

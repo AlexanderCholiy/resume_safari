@@ -4,7 +4,7 @@ footer {
     text-align: center;
     padding: 40px 30px;
     transition: 
-        background-color var(--transition-value),
+        background-color var(--transition-value);
         /* color var(--transition-value); */
     box-shadow: 0 -2px 4px var(--dark-add-color);
 }

@@ -37,7 +37,7 @@ class MyResumeListView(LoginRequiredMixin, ListView):
             Resume.objects
             .filter(user=self.request.user)
             .select_related('user', 'user__location')
-            .order_by('-created_at', 'pk')
+            .order_by('-is_published', '-created_at', 'pk')
         )
 
 
@@ -45,11 +45,9 @@ class ResumeDetailView(DetailView):
     model = Resume
     template_name = 'resume/resume_detail.html'
     context_object_name = 'resume'
-    slug_field = 'slug'
-    slug_url_kwarg = 'slug'
 
-    def get_queryset(self: 'ResumeDetailView') -> 'QuerySet[Resume]':
-        return (
+    def get_queryset(self: 'ResumeDetailView') -> QuerySet[Resume]:
+        base_qs = (
             Resume.objects
             .select_related('user', 'user__location')
             .prefetch_related(
@@ -64,8 +62,19 @@ class ResumeDetailView(DetailView):
                         'experience')
                 ),
             )
-            .filter(user__is_active=True, is_published=True)
         )
+
+        if self.request.user.is_authenticated:
+            slug = self.kwargs.get('slug')
+            if slug:
+                try:
+                    resume = Resume.objects.only('user_id').get(slug=slug)
+                    if resume.user_id == self.request.user.id:
+                        return base_qs
+                except Resume.DoesNotExist:
+                    pass
+
+        return base_qs.filter(user__is_active=True, is_published=True)
 
     def get_context_data(self: 'ResumeDetailView', **kwargs: dict) -> dict:
         context = super().get_context_data(**kwargs)

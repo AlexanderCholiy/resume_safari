@@ -8,26 +8,26 @@ main {
 main.classic-style {
   background:
     linear-gradient(rgba(245, 240, 240, 0.4), rgba(235, 230, 230, 0.4)),
-    url('/static/img/classic_style/background.jpg') no-repeat center center / cover;
+    url('../img/classic_style/background.jpg') no-repeat center center / cover;
 }
 
 main.modern-style {
   background:
     linear-gradient(rgba(230, 230, 255, 0.6), rgba(200, 200, 250, 0.2)),
-    url('/static/img/modern_style/background.jpg') no-repeat center center / cover;
+    url('../img/modern_style/background.jpg') no-repeat center center / cover;
 }
 
 body.dark main.classic-style {
     background: 
         linear-gradient(rgba(23, 23, 28, 0.9), rgba(40, 40, 45, 0.9)),
-        url('/static/img/classic_style/background.jpg') 
+        url('../img/classic_style/background.jpg') 
         no-repeat center center / cover;
 }
 
 body.dark main.modern-style {
     background: 
         linear-gradient(rgba(23, 23, 28, 0.9), rgba(40, 40, 45, 0.7)),
-        url('/static/img/modern_style/background.jpg') 
+        url('../img/modern_style/background.jpg') 
         no-repeat center center / cover;
 }
 

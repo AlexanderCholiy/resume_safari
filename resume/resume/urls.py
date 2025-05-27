@@ -16,6 +16,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('pages/', include('pages.urls', namespace='pages')),
     path('auth/', include('services.urls', namespace='services')),
+    path('api/', include('api.urls', namespace='api')),
     path(
         'login/',
         views.LoginView.as_view(extra_context={'auth_page': True}),

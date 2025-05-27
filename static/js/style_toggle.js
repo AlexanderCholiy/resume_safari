@@ -15,10 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modern: 'Современный стиль'
   };
 
-  const styleFonts = {
-    classic: '/static/css/fonts_classic.css',
-    modern: '/static/css/fonts_modern.css'
-  };
+  const styleFonts = window.STYLE_FONTS;
 
   let currentFontLink = null;
 
