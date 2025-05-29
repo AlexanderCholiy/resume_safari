@@ -54,8 +54,9 @@ class WebConfig(Config):
     STATIC_DIR: str = os.path.join(ROOT_DIR, 'static')
     STATIC_ROOT: str = os.path.join(ROOT_DIR, 'static_backend_build')
     DATA_DIR: str = os.path.join(ROOT_DIR, 'data')
-
     DATA_2_DB_PATH: str = os.path.join(DATA_DIR, 'data_2_db.xlsx')
+
+    PREFIX: str = 'resume-safari/'
 
     @staticmethod
     def validate() -> None:

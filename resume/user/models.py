@@ -4,8 +4,9 @@ from django.utils.text import slugify
 from unidecode import unidecode
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxLengthValidator
 
-from core.models import Grid, Skill, Timestamp
+from core.models import Grid, Skill, Timestamp, NormalizedPairModel
 from .constants import (
     MAX_USER_PATRONYMIC_LENGTH,
     MAX_COUNTRY_LENGTH,
@@ -18,6 +19,9 @@ from .constants import (
     MAX_INSTITUTION_NAME_LENGTH,
     MAX_PHONE_LENGTH,
     MAX_SLUG_LENGTH,
+    MAX_CATEGORY_LENGTH,
+    MAX_RESUME_COUNT,
+    MAX_RESUME_TEXT_LENGTH,
 )
 
 
@@ -106,7 +110,7 @@ class User(AbstractUser):
                 })
 
 
-class Location(models.Model):
+class Location(NormalizedPairModel):
     country = models.CharField(
         'Страна',
         max_length=MAX_COUNTRY_LENGTH,
@@ -116,6 +120,9 @@ class Location(models.Model):
         'Город',
         max_length=MAX_CITY_LENGTH,
     )
+
+    field1_name = 'country'
+    field2_name = 'city'
 
     class Meta:
         verbose_name = 'локация'
@@ -127,49 +134,6 @@ class Location(models.Model):
             )
         ]
         ordering = ('-country', '-city',)
-
-    def __str__(self: 'Location') -> str:
-        return f'г. {self.city} ({self.country})'
-
-    def clean(self: 'Location') -> None:
-        super().clean()
-        # Для SQLite лучше использовать __iregex для работы с кирилецей.
-        if (
-            Location.objects
-            .filter(
-                country__iregex=rf'^\s*{self.country}\s*$',
-                city__iregex=rf'^\s*{self.city}\s*$'
-            )
-            .exclude(pk=self.pk)
-            .exists()
-        ):
-            raise ValidationError({
-                'country': (
-                    f'Локация с такой страной "{self.country}" и городом '
-                    f'"{self.city}" уже существует (без учёта регистра).'
-                )
-            })
-
-    @classmethod
-    def update_or_create_normalized(
-        cls: 'Location', country: str, city: str
-    ) -> tuple['Location', bool]:
-        existing_location = cls.objects.filter(
-            country__iregex=rf'^\s*{country}\s*$',
-            city__iregex=rf'^\s*{city}\s*$'
-        ).first()
-
-        if existing_location:
-            existing_location.country = country
-            existing_location.city = city
-            existing_location.full_clean()
-            existing_location.save()
-            return existing_location, False
-        else:
-            location = cls(country=country, city=city)
-            location.full_clean()
-            location.save()
-            return location, True
 
 
 class HardSkillName(Skill):
@@ -272,7 +236,7 @@ class Education(Timestamp):
         verbose_name_plural = 'Образование'
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'institution', 'degree', 'field_of_study'],
+                fields=['user', 'institution', 'start_date'],
                 name='unique_education'
             )
         ]
@@ -313,7 +277,7 @@ class Experience(Timestamp):
         verbose_name_plural = 'Опыт работы'
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'company', 'position'],
+                fields=['user', 'company', 'start_date'],
                 name='unique_experience'
             )
         ]
@@ -331,12 +295,18 @@ class Resume(models.Model):
         verbose_name='Пользователь',
         db_index=True,
     )
-    position = models.CharField(
-        'Должность',
-        max_length=MAX_POSITION_LENGTH,
+    position = models.ForeignKey(
+        'Position',
+        on_delete=models.CASCADE,
+        related_name='resume',
+        verbose_name='Позиция',
         db_index=True,
     )
-    about_me = models.TextField('Обо мне')
+    about_me = models.TextField(
+        'Обо мне',
+        validators=[MaxLengthValidator(MAX_RESUME_TEXT_LENGTH)],
+        help_text=f'Максимум {MAX_RESUME_TEXT_LENGTH} символов'
+    )
     is_published = models.BooleanField(
         'Опубликовано',
         default=True,
@@ -383,9 +353,34 @@ class Resume(models.Model):
         return f'{self.user}: {self.position}'
 
     def save(self: 'Resume', *args: tuple, **kwargs: dict) -> None:
-        if not self.slug:
-            self.slug = slugify(
-                unidecode(f'{self.user.username}-{self.position}'))
+        if self.pk is None:
+            count = Resume.objects.filter(
+                user=self.user, is_published=self.is_published).count()
+            if count >= MAX_RESUME_COUNT:
+                status = 'опубликованных' if self.is_published else (
+                    'черновиков')
+                raise ValidationError(
+                    f'У пользователя может быть максимум {MAX_RESUME_COUNT} '
+                    f'{status} резюме.'
+                )
+
+        first_slug = slugify(
+            unidecode(f'{self.user.username}-{self.position.position}')
+        )
+        second_slug = slugify(
+            unidecode(
+                f'{self.user.username}-'
+                f'{self.position.category}-{self.position.position}'
+            )
+        )
+
+        if not (
+            Resume.objects.exclude(pk=self.pk).filter(slug=first_slug).exists()
+        ):
+            self.slug = first_slug
+        else:
+            self.slug = second_slug
+
         super().save(*args, **kwargs)
 
 
@@ -429,3 +424,30 @@ class ResumeEducation(models.Model):
                 name='unique_education_per_resume'
             )
         ]
+
+
+class Position(NormalizedPairModel):
+    category = models.CharField(
+        'Категория',
+        max_length=MAX_CATEGORY_LENGTH,
+        db_index=True,
+    )
+    position = models.CharField(
+        'Должность',
+        max_length=MAX_POSITION_LENGTH,
+        db_index=True,
+    )
+
+    field1_name = 'category'
+    field2_name = 'position'
+
+    class Meta:
+        verbose_name = 'должность'
+        verbose_name_plural = 'Должности'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['position', 'category'],
+                name='unique_position'
+            )
+        ]
+        ordering = ('-category', '-position',)

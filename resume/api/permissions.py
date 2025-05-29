@@ -10,9 +10,11 @@ class IsOwnerOrStaffOrAdmin(permissions.BasePermission):
         self: 'IsOwnerOrStaffOrAdmin', request: request, view: View, obj: Any
     ) -> bool:
         return (
-            obj.user == request.user
-            or request.user.is_staff
-            or request.user.is_superuser
+            request.user and request.user.is_active and (
+                request.user.is_staff
+                or request.user.is_superuser
+                or obj == request.user
+            )
         )
 
 
@@ -20,11 +22,9 @@ class IsAdminOrStaff(permissions.BasePermission):
     def has_permission(
         self: 'IsAdminOrStaff', request: request, view: View
     ) -> bool:
-        return request.user.is_staff or request.user.is_superuser
-
-
-class IsNotBlocked(permissions.BasePermission):
-    def has_permission(
-        self: 'IsNotBlocked', request: request, view: View
-    ) -> bool:
-        return request.user.is_active
+        return (
+            request.user and request.user.is_active and (
+                request.user.is_staff
+                or request.user.is_superuser
+            )
+        )

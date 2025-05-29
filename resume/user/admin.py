@@ -4,7 +4,7 @@ from django.db.models.query import QuerySet
 
 from .models import (
     User, HardSkill, SoftSkill, Resume, Education, Experience, Location,
-    HardSkillName, SoftSkillName, ResumeExperience, ResumeEducation,
+    HardSkillName, SoftSkillName, ResumeExperience, ResumeEducation, Position,
 )
 from .constants import (
     MAX_USERS_PER_PAGE,
@@ -13,6 +13,7 @@ from .constants import (
     MAX_EXPERIANCE_PER_PAGE,
     MAX_EDUCATIONS_PER_PAGE,
     MAX_RESUMES_PER_PAGE,
+    MAX_POSITION_PER_PAGE,
 )
 
 
@@ -53,10 +54,17 @@ class UserAdmin(admin.ModelAdmin):
 @admin.register(Location)
 class LocatiomAdmin(admin.ModelAdmin):
     list_display = ('country', 'city',)
-    search_fields = ('country', 'city',)
+    search_fields = ('city',)
     list_filter = ('country',)
     list_per_page = MAX_LOCATIONS_PER_PAGE
-    list_editable = ('city',)
+
+
+@admin.register(Position)
+class PostionAdmin(admin.ModelAdmin):
+    list_display = ('category', 'position',)
+    search_fields = ('category', 'position',)
+    list_filter = ('category',)
+    list_per_page = MAX_POSITION_PER_PAGE
 
 
 @admin.register(HardSkillName)
@@ -255,7 +263,7 @@ class ResumeAdmin(admin.ModelAdmin):
     list_filter = ('user', 'is_published',)
     list_editable = ('is_published', 'position',)
     list_per_page = MAX_RESUMES_PER_PAGE
-    autocomplete_fields = ('user',)
+    autocomplete_fields = ('user', 'position',)
     inlines = (
         EducationInline,
         ExperienceInline,
@@ -267,5 +275,5 @@ class ResumeAdmin(admin.ModelAdmin):
         return (
             super().get_queryset(request)
             .prefetch_related('educations', 'experiences',)
-            .select_related('user')
+            .select_related('user', 'position',)
         )

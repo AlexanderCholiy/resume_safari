@@ -5,7 +5,7 @@
     <h2>{{ resume.user.get_full_name }}</h2>
 
     <div class="position-age">
-      <p>{{ resume.position }}</p>
+      <p>{{ resume.position.position }}</p>
       {% if resume.user.age %}
         <p>Возраст: {{ resume.user.age }}</p>
       {% endif %}

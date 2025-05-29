@@ -20,7 +20,7 @@ class ResumeListView(ListView):
         return (
             Resume.objects
             .filter(user__is_active=True, is_published=True)
-            .select_related('user', 'user__location')
+            .select_related('user', 'user__location', 'position')
             .order_by('-created_at', 'pk')
         )
 
@@ -35,7 +35,7 @@ class MyResumeListView(LoginRequiredMixin, ListView):
         return (
             Resume.objects
             .filter(user=self.request.user)
-            .select_related('user', 'user__location')
+            .select_related('user', 'user__location', 'position')
             .order_by('-is_published', '-created_at', 'pk')
         )
 

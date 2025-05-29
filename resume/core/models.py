@@ -8,6 +8,7 @@ from .constants import (
     MAX_SKILL_DESCRIPTION_LENGTH,
     MAX_SKILL_NAME_LENGTH,
     DEFAULT_GRID_ROW_AND_COLUMN,
+    MAX_EDUCATION_AND_EXPERIENCE,
 )
 
 
@@ -32,6 +33,22 @@ class Grid(models.Model):
     class Meta:
         abstract = True
 
+    def clean(self: 'Grid') -> None:
+        super().clean()
+        resume = getattr(self, 'resume', None)
+        if resume is not None:
+            model_class = self.__class__
+            qs = model_class.objects.filter(resume=resume)
+            if self.pk:
+                qs = qs.exclude(pk=self.pk)
+            count = qs.count()
+            max_allowed = MAX_GRID_SIZE_Y * MAX_GRID_SIZE_X
+            if count >= max_allowed:
+                raise ValidationError(
+                    f'У одного резюме может быть максимум {max_allowed} '
+                    f'элементов в {model_class.__name__}.'
+                )
+
 
 class Skill(models.Model):
     name = models.CharField(
@@ -54,7 +71,7 @@ class Skill(models.Model):
     def clean(self: 'Skill') -> None:
         super().clean()
         cls = self.__class__
-        # Для SQLite лучше использовать __iregex для работы с кирилецей.
+        # Для SQLite лучше использовать __iregex для работы с кирилецей:
         if (
             cls.objects
             .filter(name__iregex=rf'^\s*{self.name}\s*$')
@@ -94,3 +111,75 @@ class Timestamp(models.Model):
 
     class Meta:
         abstract = True
+
+    def clean(self: 'Timestamp') -> None:
+        super().clean()
+        user = getattr(self, 'user', None)
+        if user is not None:
+            model_class = self.__class__
+            qs = model_class.objects.filter(user=user)
+            if self.pk:
+                qs = qs.exclude(pk=self.pk)
+            count = qs.count()
+            if count >= MAX_EDUCATION_AND_EXPERIENCE:
+                raise ValidationError(
+                    f'У одного пользователя может быть максимум '
+                    f'{MAX_EDUCATION_AND_EXPERIENCE} элементов в '
+                    f'{model_class.__name__}.'
+                )
+
+
+class NormalizedPairModel(models.Model):
+    field1_name: str = None
+    field2_name: str = None
+
+    class Meta:
+        abstract = True
+
+    def __str__(self: 'NormalizedPairModel') -> str:
+        val1 = getattr(self, self.field1_name)
+        val2 = getattr(self, self.field2_name)
+        return f'{val1}: {val2}'
+
+    def clean(self: 'NormalizedPairModel') -> None:
+        super().clean()
+        Model = self.__class__
+        val1 = getattr(self, self.field1_name)
+        val2 = getattr(self, self.field2_name)
+        # Для SQLite лучше использовать __iregex для работы с кирилецей:
+        filters = {
+            f'{self.field1_name}__iregex': rf'^\s*{val1}\s*$',
+            f'{self.field2_name}__iregex': rf'^\s*{val2}\s*$',
+        }
+        if Model.objects.filter(**filters).exclude(pk=self.pk).exists():
+            raise ValidationError({
+                self.field1_name: (
+                    f'Запись с такими значениями уже существует: '
+                    f'"{val1}" и "{val2}" (без учёта регистра).'
+                )
+            })
+
+    @classmethod
+    def update_or_create_normalized(
+        cls: type['NormalizedPairModel'], val1: str, val2: str
+    ) -> tuple['NormalizedPairModel', bool]:
+        filters = {
+            f'{cls.field1_name}__iregex': rf'^\s*{val1}\s*$',
+            f'{cls.field2_name}__iregex': rf'^\s*{val2}\s*$',
+        }
+        instance = cls.objects.filter(**filters).first()
+        if instance:
+            setattr(instance, cls.field1_name, val1)
+            setattr(instance, cls.field2_name, val2)
+            instance.full_clean()
+            instance.save()
+            return instance, False
+        else:
+            kwargs = {
+                cls.field1_name: val1,
+                cls.field2_name: val2,
+            }
+            instance = cls(**kwargs)
+            instance.full_clean()
+            instance.save()
+            return instance, True
