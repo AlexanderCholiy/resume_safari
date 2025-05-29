@@ -1,5 +1,9 @@
 from django.utils import timezone
 from rest_framework import serializers
+from djoser.serializers import (
+    UserCreateSerializer as BaseUserCreateSerializer,
+    UserSerializer as BaseUserSerializer
+)
 
 from user.models import (
     HardSkillName,
@@ -15,6 +19,30 @@ from user.models import (
     ResumeExperience,
     ResumeEducation,
 )
+
+
+class CustomUserCreateSerializer(BaseUserCreateSerializer):
+    class Meta(BaseUserCreateSerializer.Meta):
+        model = User
+        fields = ('pk', 'username', 'email', 'password')
+        extra_kwargs = {
+            'email': {'required': True},
+            'password': {'write_only': True},
+        }
+
+    def to_representation(
+        self: 'CustomUserCreateSerializer', instance: User
+    ) -> dict:
+        rep = super().to_representation(instance)
+        rep['detail'] = 'Проверьте почту для завершения регистрации'
+        return rep
+
+
+class CustomUserSerializer(BaseUserSerializer):
+    class Meta(BaseUserSerializer.Meta):
+        model = User
+        fields = ('pk', 'email', 'username', 'first_name', 'last_name')
+        read_only_fields = ('email',)
 
 
 class HardSkillNameSerializer(serializers.ModelSerializer):

@@ -18,6 +18,8 @@ urlpatterns = [
     path(
         WebConfig.PREFIX,
         include([
+            path('api/auth/', include('djoser.urls')),
+            path('api/auth/', include('djoser.urls.jwt')),
             path('api/', include('api.urls', namespace='api')),
             path('pages/', include('pages.urls', namespace='pages')),
             path('admin/', admin.site.urls),

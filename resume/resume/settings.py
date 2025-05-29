@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'debug_toolbar',
     'rest_framework',
+    'djoser',
     'user.apps.UserConfig',
     'pages.apps.PagesConfig',
     'services.apps.ServicesConfig',
@@ -132,3 +133,31 @@ PASSWORD_RESET_TIMEOUT = WebConfig.EMAIL_PSWD_RESET_TIMEOUT
 LOGIN_REDIRECT_URL = 'user:resume_list'
 LOGIN_URL = 'login'
 CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': WebConfig.ACCESS_TOKEN_LIFETIME,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+DJOSER = {
+    'LOGIN_FIELD': 'email',
+    'USER_CREATE_PASSWORD_RETYPE': False,
+    'SEND_ACTIVATION_EMAIL': True,
+    'ACTIVATION_URL': 'resume-safari/auth/activate/{uid}/{token}',
+    'SERIALIZERS': {
+        'user_create': 'api.serializers.CustomUserCreateSerializer',
+        'user': 'api.serializers.CustomUserSerializer',
+        'current_user': 'api.serializers.CustomUserSerializer',
+    },
+}

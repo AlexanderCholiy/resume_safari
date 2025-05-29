@@ -35,7 +35,8 @@ def register(request: HttpRequest) -> HttpResponse:
             message = (
                 f'Привет, {user.username}!\n\n'
                 f'Для активации аккаунта на сайте {current_site} перейдите '
-                f'по ссылке:\n\n{link}'
+                f'по ссылке:\n\n{link}\n\n'
+                'Срок действия ссылки — 1 день.'
             )
             send_mail(
                 subject,

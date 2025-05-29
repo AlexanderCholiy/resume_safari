@@ -1,5 +1,6 @@
 import os
 from typing import Final, Optional
+from datetime import timedelta
 
 from dotenv import load_dotenv
 
@@ -40,6 +41,9 @@ class Config:
 
 class WebConfig(Config):
     SECRET_KEY: Optional[str] = os.getenv('WEB_SECRET_KEY')
+    ACCESS_TOKEN_LIFETIME = timedelta(
+        seconds=int(os.getenv('ACCESS_TOKEN_SEC_LIFETIME'))
+    )
     EMAIL_SERVER: Optional[str] = os.getenv('WEB_EMAIL_SERVER')
     EMAIL_PORT: int = int(os.getenv('WEB_EMAIL_PORT', 587))
     EMAIL_LOGIN: Optional[str] = os.getenv('WEB_EMAIL_LOGIN')
