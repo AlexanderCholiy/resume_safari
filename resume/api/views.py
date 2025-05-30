@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 from user.models import (
     HardSkillName,
@@ -45,9 +46,13 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self: 'UserViewSet') -> bool:
         if self.action == 'create':
-            return [IsAdminOrStaff()]
+            return []
         elif self.action in ('update', 'partial_update', 'destroy'):
             return [IsOwnerOrStaffOrAdmin()]
+        elif self.action in ('list',):
+            return [IsAdminOrStaff()]
+        elif self.action == 'me':
+            return [IsAuthenticated()]
         return super().get_permissions()
 
 

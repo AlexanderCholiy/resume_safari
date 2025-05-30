@@ -26,6 +26,7 @@ from .constants import (
 
 
 class User(AbstractUser):
+    email = models.EmailField('Email', unique=True, blank=True)
     patronymic = models.CharField(
         'Отчество',
         max_length=MAX_USER_PATRONYMIC_LENGTH,

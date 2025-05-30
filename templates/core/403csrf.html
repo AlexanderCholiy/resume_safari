@@ -13,7 +13,7 @@
     <h1>Ошибка CSRF: 403</h1>
     <p>Ошибка проверки CSRF, запрос отклонён.</p>
     {% if reason %}
-    <p><small>Причина: {{ reason }}</small></p>
+    {% comment %} <p><small>Причина: {{ reason }}</small></p> {% endcomment %}
     {% endif %}
     <div class="error-link">
       <a href="{% url 'user:resume_list' %}">Вернуться на главную</a>

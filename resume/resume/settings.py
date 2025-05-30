@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'debug_toolbar',
     'rest_framework',
+    'rest_framework_simplejwt',
     'djoser',
     'user.apps.UserConfig',
     'pages.apps.PagesConfig',
@@ -148,16 +149,4 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': WebConfig.ACCESS_TOKEN_LIFETIME,
     'AUTH_HEADER_TYPES': ('Bearer',),
-}
-
-DJOSER = {
-    'LOGIN_FIELD': 'email',
-    'USER_CREATE_PASSWORD_RETYPE': False,
-    'SEND_ACTIVATION_EMAIL': True,
-    'ACTIVATION_URL': 'resume-safari/auth/activate/{uid}/{token}',
-    'SERIALIZERS': {
-        'user_create': 'api.serializers.CustomUserCreateSerializer',
-        'user': 'api.serializers.CustomUserSerializer',
-        'current_user': 'api.serializers.CustomUserSerializer',
-    },
 }

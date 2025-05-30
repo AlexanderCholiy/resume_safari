@@ -1,10 +1,8 @@
-from django.utils import timezone
-from rest_framework import serializers
-from djoser.serializers import (
-    UserCreateSerializer as BaseUserCreateSerializer,
-    UserSerializer as BaseUserSerializer
-)
+import datetime as dt
 
+from rest_framework import serializers
+
+from .constants import MIN_AGE, MAX_AGE
 from user.models import (
     HardSkillName,
     SoftSkillName,
@@ -19,30 +17,6 @@ from user.models import (
     ResumeExperience,
     ResumeEducation,
 )
-
-
-class CustomUserCreateSerializer(BaseUserCreateSerializer):
-    class Meta(BaseUserCreateSerializer.Meta):
-        model = User
-        fields = ('pk', 'username', 'email', 'password')
-        extra_kwargs = {
-            'email': {'required': True},
-            'password': {'write_only': True},
-        }
-
-    def to_representation(
-        self: 'CustomUserCreateSerializer', instance: User
-    ) -> dict:
-        rep = super().to_representation(instance)
-        rep['detail'] = 'Проверьте почту для завершения регистрации'
-        return rep
-
-
-class CustomUserSerializer(BaseUserSerializer):
-    class Meta(BaseUserSerializer.Meta):
-        model = User
-        fields = ('pk', 'email', 'username', 'first_name', 'last_name')
-        read_only_fields = ('email',)
 
 
 class HardSkillNameSerializer(serializers.ModelSerializer):
@@ -130,6 +104,23 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_age(self: 'UserSerializer', obj: User) -> int | None:
         return obj.age()
+
+    def validate_date_of_birth(
+        self: 'UserSerializer', value: dt.date | None
+    ) -> dt.date:
+        if value is not None:
+            today = dt.date.today()
+            min_age = MIN_AGE
+            max_age = MAX_AGE
+            earliest = today.replace(year=today.year - max_age)
+            latest = today.replace(year=today.year - min_age)
+
+            if not (earliest <= value <= latest):
+                raise serializers.ValidationError(
+                    f'Возраст пользователя должен быть от {min_age} до '
+                    f'{max_age} лет.'
+                )
+        return value
 
     def create(self: 'UserSerializer', validated_data: dict) -> User:
         educations: list[dict] = validated_data.pop('educations', [])
