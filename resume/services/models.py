@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 
 from .constants import MAX_USERNAME_LEN, MAX_PASSWORD_LEN
+from core.config import WebConfig
 
 
 class PendingUser(models.Model):
@@ -24,3 +25,10 @@ class PendingUser(models.Model):
 
     def get_email_field_name(self: 'PendingUser') -> str:
         return 'email'
+
+    @property
+    def is_expired(self: 'PendingUser') -> bool:
+        """Проверка, актуальная ли регистрация для этого пользователя."""
+        return (
+            timezone.now() - self.last_login > WebConfig.ACCESS_TOKEN_LIFETIME
+        )

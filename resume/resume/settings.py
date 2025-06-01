@@ -24,7 +24,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'debug_toolbar',
     'rest_framework',
-    'rest_framework_simplejwt',
     'djoser',
     'user.apps.UserConfig',
     'pages.apps.PagesConfig',
@@ -137,7 +136,7 @@ CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': [

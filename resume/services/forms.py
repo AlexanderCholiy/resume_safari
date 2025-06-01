@@ -1,12 +1,10 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import make_password
-from django.utils import timezone
 from django.contrib.auth.password_validation import validate_password
 
 from .models import PendingUser
 from user.models import User
-from core.config import WebConfig
 
 
 class CustomUserCreationForm(forms.ModelForm):
@@ -35,7 +33,7 @@ class CustomUserCreationForm(forms.ModelForm):
 
         pending_user = PendingUser.objects.filter(username=username).first()
         if pending_user:
-            if self._is_expired(pending_user):
+            if pending_user.is_expired:
                 pending_user.delete()
             else:
                 raise ValidationError(
@@ -54,7 +52,7 @@ class CustomUserCreationForm(forms.ModelForm):
 
         pending_user = PendingUser.objects.filter(email=email).first()
         if pending_user:
-            if self._is_expired(pending_user):
+            if pending_user.is_expired:
                 pending_user.delete()
             else:
                 raise ValidationError(
@@ -82,11 +80,3 @@ class CustomUserCreationForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
-
-    def _is_expired(
-        self: 'CustomUserCreationForm', pending_user: PendingUser
-    ) -> bool:
-        return (
-            timezone.now() - pending_user.last_login
-            > WebConfig.ACCESS_TOKEN_LIFETIME
-        )

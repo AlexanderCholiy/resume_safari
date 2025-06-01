@@ -1,5 +1,7 @@
 import datetime as dt
 
+from django.contrib.auth.password_validation import validate_password
+from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 
 from .constants import MIN_AGE, MAX_AGE
@@ -11,12 +13,128 @@ from user.models import (
     Education,
     Experience,
     User,
-    Resume,
+    # Resume,
     SoftSkill,
     HardSkill,
-    ResumeExperience,
-    ResumeEducation,
+    # ResumeExperience,
+    # ResumeEducation,
 )
+from services.models import PendingUser
+
+
+class PendingUserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        write_only=True, validators=[validate_password])
+
+    class Meta:
+        model = PendingUser
+        fields = ('username', 'email', 'password')
+
+    def validate_username(self: 'PendingUserSerializer', username: str) -> str:
+        for validator in User._meta.get_field('username').validators:
+            validator(username)
+
+        if User.objects.filter(username=username).exists():
+            raise serializers.ValidationError('Имя пользователя уже занято.')
+
+        pending_user = PendingUser.objects.filter(username=username).first()
+        if pending_user:
+            if pending_user.is_expired:
+                pending_user.delete()
+            else:
+                raise serializers.ValidationError(
+                    'Имя пользователя ожидает подтверждения.')
+
+        return username
+
+    def validate_email(self: 'PendingUserSerializer', email: str) -> str:
+        for validator in User._meta.get_field('email').validators:
+            validator(email)
+
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError('Email уже зарегистрирован.')
+
+        pending_user = PendingUser.objects.filter(email=email).first()
+        if pending_user:
+            if pending_user.is_expired:
+                pending_user.delete()
+            else:
+                raise serializers.ValidationError(
+                    'Регистрация с этим email ожидает подтверждения.')
+
+        return email
+
+    def create(
+        self: 'PendingUserSerializer', validated_data: dict
+    ) -> PendingUser:
+        raw_password = validated_data.pop('password')
+        validated_data['password'] = make_password(raw_password)
+        return PendingUser.objects.create(**validated_data)
+
+
+class UserMeSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=True)
+
+    class Meta:
+        model = User
+        fields = ('pk', 'username', 'email')
+
+    def validate_username(self, username):
+        user = self.instance
+        if username == user.username:
+            return username
+
+        for validator in User._meta.get_field('username').validators:
+            validator(username)
+
+        if User.objects.filter(username=username).exists():
+            raise serializers.ValidationError('Имя пользователя уже занято.')
+
+        pending_user = PendingUser.objects.filter(username=username).first()
+        if pending_user:
+            if pending_user.is_expired:
+                pending_user.delete()
+            else:
+                raise serializers.ValidationError('Имя пользователя ожидает подтверждения.')
+
+        return username
+
+    def validate_email(self, email):
+        user = self.instance
+        if email == user.email:
+            return email
+
+        for validator in User._meta.get_field('email').validators:
+            validator(email)
+
+        if User.objects.filter(email=email).exists():
+            raise serializers.ValidationError('Email уже зарегистрирован.')
+
+        pending_user = PendingUser.objects.filter(email=email).first()
+        if pending_user:
+            if pending_user.is_expired:
+                pending_user.delete()
+            else:
+                raise serializers.ValidationError('Регистрация с этим email ожидает подтверждения.')
+
+        return email
+
+
+class PasswordChangeSerializer(serializers.Serializer):
+    old_password = serializers.CharField(write_only=True)
+    new_password = serializers.CharField(
+        write_only=True, validators=[validate_password])
+
+
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    uid = serializers.CharField()
+    token = serializers.CharField()
+    new_password = serializers.CharField(
+        write_only=True, validators=[validate_password])
 
 
 class HardSkillNameSerializer(serializers.ModelSerializer):
@@ -70,6 +188,11 @@ class ExperienceSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    Данный сериализатор расчитан для обновления дополнительных полей
+    пользователя, относящиеся к его резюме. Для обновления полей email,
+    password, username иcпользуется djoser.
+    """
     educations = EducationSerializer(many=True, required=False)
     experiences = ExperienceSerializer(many=True, required=False)
     location = serializers.PrimaryKeyRelatedField(
@@ -101,6 +224,7 @@ class UserSerializer(serializers.ModelSerializer):
             'educations',
             'experiences',
         )
+        read_only_fields = ('username', 'email',)
 
     def get_age(self: 'UserSerializer', obj: User) -> int | None:
         return obj.age()
@@ -122,34 +246,9 @@ class UserSerializer(serializers.ModelSerializer):
                 )
         return value
 
-    def create(self: 'UserSerializer', validated_data: dict) -> User:
-        educations: list[dict] = validated_data.pop('educations', [])
-        experiences: list[dict] = validated_data.pop('experiences', [])
-
-        user = User.objects.create(**validated_data)
-
-        for education in educations:
-            Education.objects.create(user=user, **education)
-
-        for experience in experiences:
-            Experience.objects.create(user=user, **experience)
-
-        return user
-
     def update(
         self: 'UserSerializer', instance: User, validated_data: dict
     ) -> User:
-        request = self.context.get('request')
-        if 'email' in validated_data and not (
-            request and request.user and request.user.is_active and (
-                request.user.is_staff or request.user.is_superuser
-            )
-        ):
-            raise serializers.ValidationError({
-                'email': (
-                    'Изменение email по данному url доступно только персоналу.'
-                )
-            })
 
         educations: list[dict] = validated_data.pop('educations', None)
         experiences: list[dict] = validated_data.pop('experiences', None)
@@ -253,92 +352,3 @@ class SoftSkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = SoftSkill
         fields = ('skill', 'grid_column', 'grid_row',)
-
-
-class ResumeSerializer(serializers.ModelSerializer):
-    user = UserInResumeSerializer(read_only=True)
-    position = serializers.PrimaryKeyRelatedField(
-        queryset=Position.objects.all(),
-        required=True,
-    )
-    hard_skills = serializers.PrimaryKeyRelatedField(
-        queryset=HardSkill.objects.all(),
-        many=True,
-        required=False,
-        write_only=True,
-    )
-    hard_skills_detail = HardSkillSerializer(
-        many=True, source='hard_skills', read_only=True)
-    soft_skills = serializers.PrimaryKeyRelatedField(
-        queryset=SoftSkill.objects.all(),
-        many=True,
-        required=False,
-        write_only=True,
-    )
-    soft_skills_detail = SoftSkillSerializer(
-        many=True, source='soft_skills', read_only=True)
-    educations = serializers.PrimaryKeyRelatedField(
-        queryset=Education.objects.all(),
-        many=True,
-        required=False,
-        write_only=True,
-    )
-    educations_detail = EducationSerializer(
-        many=True, source='educations', read_only=True)
-    experiences = serializers.PrimaryKeyRelatedField(
-        queryset=Experience.objects.all(),
-        many=True,
-        required=False,
-        write_only=True,
-    )
-    experiences_detail = ExperienceSerializer(
-        many=True, source='experiences', read_only=True)
-
-    class Meta:
-        model = Resume
-        fields = (
-            'slug',
-            'user',
-            'position',
-            'about_me',
-            'is_published',
-            'hard_skills',
-            'hard_skills_detail',
-            'soft_skills',
-            'soft_skills_detail',
-            'educations',
-            'educations_detail',
-            'experiences',
-            'experiences_detail',
-        )
-        read_only_fields = ('slug',)
-
-    def create(self: 'ResumeSerializer', validated_data: dict) -> Resume:
-        hard_skills: list[dict] = validated_data.pop('hard_skills', [])
-        soft_skills: list[dict] = validated_data.pop('soft_skills', [])
-        educations: list[int] = validated_data.pop('educations', [])
-        experiences: list[int] = validated_data.pop('experiences', [])
-
-        request = self.context.get('request')
-        if not request or not request.user.is_authenticated:
-            raise serializers.ValidationError(
-                'Вы должны быть авторизованы для создания резюме.'
-            )
-        user = request.user
-
-        resume = Resume.objects.create(user=user, **validated_data)
-
-        for skill in hard_skills:
-            HardSkill.objects.create(resume=resume, skill=skill)
-
-        for skill in soft_skills:
-            SoftSkill.objects.create(resume=resume, skill=skill)
-
-        for education in educations:
-            ResumeEducation.objects.create(resume=resume, education=education)
-
-        for experience in experiences:
-            ResumeEducation.objects.create(
-                resume=resume, experience=experience)
-
-        return resume
