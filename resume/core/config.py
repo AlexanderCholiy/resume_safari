@@ -1,6 +1,7 @@
 import os
 from typing import Final, Optional
 from datetime import timedelta
+from urllib.parse import urljoin
 
 from dotenv import load_dotenv
 
@@ -60,7 +61,9 @@ class WebConfig(Config):
     DATA_DIR: str = os.path.join(ROOT_DIR, 'data')
     DATA_2_DB_PATH: str = os.path.join(DATA_DIR, 'data_2_db.xlsx')
 
+    SITE_URL: str = 'http://localhost:8000'  # Поменяй в production!
     PREFIX: str = 'resume-safari/'
+    FULL_SITE_URL: str = urljoin(SITE_URL, PREFIX)
 
     @staticmethod
     def validate() -> None:

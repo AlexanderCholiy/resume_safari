@@ -1,13 +1,13 @@
 from django.core.mail import send_mail
 from django.conf import settings
 from django.urls import reverse
-from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.http import HttpRequest
 
 from .models import PendingUser
+from core.config import WebConfig
 
 
 def send_activation_email(
@@ -19,12 +19,11 @@ def send_activation_email(
         'services:activate', kwargs={'uidb64': uid, 'token': token})
     activation_link = request.build_absolute_uri(activation_path)
 
-    current_site = get_current_site(request)
-    subject = f'Подтверждение почты на {current_site.name}'
-
+    subject = f'Подтверждение почты на {WebConfig.FULL_SITE_URL}'
     message = (
         f'Здравствуйте, {pending_user.username}!\n\n'
-        f'Вы указали этот адрес при регистрации на {current_site.domain}.\n'
+        f'Вы указали этот адрес при регистрации на '
+        f'{WebConfig.FULL_SITE_URL}.\n'
         f'Для подтверждения перейдите по ссылке:\n{activation_link}\n\n'
         f'Срок действия ссылки — 1 день.\n\n'
         f'Если вы не регистрировались — просто проигнорируйте это письмо.'

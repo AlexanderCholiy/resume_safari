@@ -13,16 +13,17 @@ from user.models import (
     Education,
     Experience,
     User,
-    # Resume,
+    Resume,
     SoftSkill,
     HardSkill,
     # ResumeExperience,
     # ResumeEducation,
 )
 from services.models import PendingUser
+from .mixins import UserValidationMixin
 
 
-class PendingUserSerializer(serializers.ModelSerializer):
+class PendingUserSerializer(serializers.ModelSerializer, UserValidationMixin):
     password = serializers.CharField(
         write_only=True, validators=[validate_password])
 
@@ -31,38 +32,10 @@ class PendingUserSerializer(serializers.ModelSerializer):
         fields = ('username', 'email', 'password')
 
     def validate_username(self: 'PendingUserSerializer', username: str) -> str:
-        for validator in User._meta.get_field('username').validators:
-            validator(username)
-
-        if User.objects.filter(username=username).exists():
-            raise serializers.ValidationError('Имя пользователя уже занято.')
-
-        pending_user = PendingUser.objects.filter(username=username).first()
-        if pending_user:
-            if pending_user.is_expired:
-                pending_user.delete()
-            else:
-                raise serializers.ValidationError(
-                    'Имя пользователя ожидает подтверждения.')
-
-        return username
+        return self.validate_username_common(username)
 
     def validate_email(self: 'PendingUserSerializer', email: str) -> str:
-        for validator in User._meta.get_field('email').validators:
-            validator(email)
-
-        if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError('Email уже зарегистрирован.')
-
-        pending_user = PendingUser.objects.filter(email=email).first()
-        if pending_user:
-            if pending_user.is_expired:
-                pending_user.delete()
-            else:
-                raise serializers.ValidationError(
-                    'Регистрация с этим email ожидает подтверждения.')
-
-        return email
+        return self.validate_email_common(email)
 
     def create(
         self: 'PendingUserSerializer', validated_data: dict
@@ -72,62 +45,26 @@ class PendingUserSerializer(serializers.ModelSerializer):
         return PendingUser.objects.create(**validated_data)
 
 
-class UserMeSerializer(serializers.ModelSerializer):
+class UserMeSerializer(serializers.ModelSerializer, UserValidationMixin):
     email = serializers.EmailField(required=True)
 
     class Meta:
         model = User
         fields = ('pk', 'username', 'email')
 
-    def validate_username(self, username):
-        user = self.instance
-        if username == user.username:
-            return username
+    def validate_username(self: 'UserMeSerializer', username: str) -> str:
+        return self.validate_username_common(
+            username, current_username=self.instance.username)
 
-        for validator in User._meta.get_field('username').validators:
-            validator(username)
-
-        if User.objects.filter(username=username).exists():
-            raise serializers.ValidationError('Имя пользователя уже занято.')
-
-        pending_user = PendingUser.objects.filter(username=username).first()
-        if pending_user:
-            if pending_user.is_expired:
-                pending_user.delete()
-            else:
-                raise serializers.ValidationError('Имя пользователя ожидает подтверждения.')
-
-        return username
-
-    def validate_email(self, email):
-        user = self.instance
-        if email == user.email:
-            return email
-
-        for validator in User._meta.get_field('email').validators:
-            validator(email)
-
-        if User.objects.filter(email=email).exists():
-            raise serializers.ValidationError('Email уже зарегистрирован.')
-
-        pending_user = PendingUser.objects.filter(email=email).first()
-        if pending_user:
-            if pending_user.is_expired:
-                pending_user.delete()
-            else:
-                raise serializers.ValidationError('Регистрация с этим email ожидает подтверждения.')
-
-        return email
+    def validate_email(self: 'UserMeSerializer', email: str) -> str:
+        return self.validate_email_common(
+            email, current_email=self.instance.email)
 
 
 class PasswordChangeSerializer(serializers.Serializer):
     old_password = serializers.CharField(write_only=True)
     new_password = serializers.CharField(
         write_only=True, validators=[validate_password])
-
-
-class PasswordResetSerializer(serializers.Serializer):
-    email = serializers.EmailField()
 
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
@@ -352,3 +289,9 @@ class SoftSkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = SoftSkill
         fields = ('skill', 'grid_column', 'grid_row',)
+
+
+class ResumeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Resume

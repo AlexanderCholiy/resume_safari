@@ -5,6 +5,7 @@ from unidecode import unidecode
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
+from django.core.files.storage import default_storage
 
 from core.models import Grid, Skill, Timestamp, NormalizedPairModel
 from .constants import (
@@ -97,6 +98,18 @@ class User(AbstractUser):
     def __str__(self: 'User') -> str:
         return self.username
 
+    def save(self: 'User', *args: tuple, **kwargs: dict) -> None:
+        try:
+            old_avatar = User.objects.get(pk=self.pk).avatar
+        except User.DoesNotExist:
+            old_avatar = None
+
+        super().save(*args, **kwargs)
+
+        if old_avatar and old_avatar != self.avatar:
+            if default_storage.exists(old_avatar.name):
+                default_storage.delete(old_avatar.name)
+
     def clean(self: 'User') -> None:
         super().clean()
         if self.phone:
@@ -109,6 +122,11 @@ class User(AbstractUser):
                 raise ValidationError({
                     'phone': 'Телефон должен быть в формате 7xxxxxxxxxx'
                 })
+
+    def delete(self: 'User', *args: tuple, **kwargs: dict) -> None:
+        if self.avatar:
+            self.avatar.delete(save=False)
+        super().delete(*args, **kwargs)
 
 
 class Location(NormalizedPairModel):
