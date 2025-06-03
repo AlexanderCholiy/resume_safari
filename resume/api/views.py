@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, exceptions, mixins
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -7,10 +7,10 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.core.mail import send_mail
 from django.conf import settings
-from django.shortcuts import get_object_or_404
 from rest_framework.request import Request
 from django.contrib.auth.hashers import make_password
 from urllib.parse import urljoin
+from django.db.models import QuerySet, Q
 
 from user.models import (
     HardSkillName,
@@ -30,9 +30,8 @@ from .serializers import (
     PendingUserSerializer,
     UserMeSerializer,
     PasswordChangeSerializer,
-    PasswordResetConfirmSerializer,
 )
-from .permissions import StaffOrReadOnly
+from .permissions import StaffOrReadOnly, IsOwnerOrReadOnly, IsOwner
 from services.models import PendingUser
 from core.config import WebConfig
 
@@ -257,14 +256,32 @@ class LocationViewSet(viewsets.ModelViewSet):
 class PositionViewSet(viewsets.ModelViewSet):
     queryset = Position.objects.all()
     serializer_class = PositionSerializer
+    permission_classes = (permissions.IsAuthenticated, StaffOrReadOnly,)
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+class UserViewSet(
+    mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet
+):
     serializer_class = UserSerializer
+    permission_classes = (permissions.IsAuthenticated, IsOwner)
+
+    def get_queryset(self: 'UserViewSet') -> QuerySet[User]:
+        return User.objects.filter(pk=self.request.user.pk)
 
 
 class ResumeViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
     queryset = Resume.objects.all()
     serializer_class = ResumeSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+
+    def get_queryset(self: 'ResumeViewSet') -> QuerySet[Resume]:
+        user = self.request.user
+        if user.is_authenticated:
+            return Resume.objects.filter(
+                Q(is_published=True) | Q(user=user)
+            )
+        else:
+            return Resume.objects.filter(
+                Q(user__is_active=True) & Q(is_published=True)
+            )

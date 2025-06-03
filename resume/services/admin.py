@@ -9,6 +9,7 @@ from .constants import MAX_PENDING_USERS_PER_PAGE
 @admin.register(PendingUser)
 class UserAdmin(admin.ModelAdmin):
     list_display = (
+        'pk',
         'username',
         'email',
         'last_login',

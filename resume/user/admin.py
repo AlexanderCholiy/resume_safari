@@ -20,6 +20,7 @@ from .constants import (
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = (
+        'pk',
         'username',
         'email',
         'first_name',
@@ -53,7 +54,7 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Location)
 class LocatiomAdmin(admin.ModelAdmin):
-    list_display = ('country', 'city',)
+    list_display = ('pk', 'country', 'city',)
     search_fields = ('city',)
     list_filter = ('country',)
     list_per_page = MAX_LOCATIONS_PER_PAGE
@@ -61,7 +62,7 @@ class LocatiomAdmin(admin.ModelAdmin):
 
 @admin.register(Position)
 class PostionAdmin(admin.ModelAdmin):
-    list_display = ('category', 'position',)
+    list_display = ('pk', 'category', 'position',)
     search_fields = ('category', 'position',)
     list_filter = ('category',)
     list_per_page = MAX_POSITION_PER_PAGE
@@ -69,7 +70,7 @@ class PostionAdmin(admin.ModelAdmin):
 
 @admin.register(HardSkillName)
 class HardSkillNameAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description',)
+    list_display = ('pk', 'name', 'description',)
     search_fields = ('name',)
     list_editable = ('description',)
     list_per_page = MAX_SKILLS_PER_PAGE
@@ -77,7 +78,7 @@ class HardSkillNameAdmin(admin.ModelAdmin):
 
 @admin.register(SoftSkillName)
 class SoftSkillNameAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description',)
+    list_display = ('pk', 'name', 'description',)
     search_fields = ('name',)
     list_editable = ('description',)
     list_per_page = MAX_SKILLS_PER_PAGE
@@ -85,7 +86,7 @@ class SoftSkillNameAdmin(admin.ModelAdmin):
 
 @admin.register(SoftSkill)
 class SoftSkillAdmin(admin.ModelAdmin):
-    list_display = ('skill', 'resume', 'grid_row', 'grid_column',)
+    list_display = ('pk', 'skill', 'resume', 'grid_row', 'grid_column',)
     search_fields = ('skill__name',)
     list_filter = ('resume',)
     list_editable = ('grid_row', 'grid_column',)
@@ -101,7 +102,7 @@ class SoftSkillAdmin(admin.ModelAdmin):
 
 @admin.register(HardSkill)
 class HardSkillAdmin(admin.ModelAdmin):
-    list_display = ('skill', 'resume', 'grid_row', 'grid_column',)
+    list_display = ('pk', 'skill', 'resume', 'grid_row', 'grid_column',)
     search_fields = ('skill__name',)
     list_filter = ('resume',)
     list_editable = ('grid_row', 'grid_column',)
@@ -118,6 +119,7 @@ class HardSkillAdmin(admin.ModelAdmin):
 @admin.register(Education)
 class EducationAdmin(admin.ModelAdmin):
     list_display = (
+        'pk',
         'user',
         'institution',
         'degree',
@@ -140,6 +142,7 @@ class EducationAdmin(admin.ModelAdmin):
 @admin.register(Experience)
 class ExperienceAdmin(admin.ModelAdmin):
     list_display = (
+        'pk',
         'user',
         'company',
         'position',

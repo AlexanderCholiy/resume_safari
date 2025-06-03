@@ -1,3 +1,4 @@
+import datetime as dt
 from rest_framework import serializers
 
 from user.models import User
@@ -52,3 +53,31 @@ class UserValidationMixin:
                     'Регистрация с этим email ожидает подтверждения.')
 
         return email
+
+    def validate_education_data(
+        self: 'UserValidationMixin', data: dict
+    ) -> None:
+        print(data)
+        if (
+            not data.get('institution')
+            or not data.get('degree')
+            or not data.get('field_of_study')
+            or not data.get('start_date')
+        ):
+            raise serializers.ValidationError(
+                'Каждое образование должно содержать institution, degree, '
+                'field_of_study и start_date.'
+            )
+
+    def validate_experience_data(
+        self: 'UserValidationMixin', data: dict
+    ) -> None:
+        if (
+            not data.get('company')
+            or not data.get('position')
+            or not data.get('start_date')
+        ):
+            raise serializers.ValidationError(
+                'Каждый опыт работы должен содержать company, position '
+                'и start_date.'
+            )

@@ -114,6 +114,11 @@ class Timestamp(models.Model):
 
     def clean(self: 'Timestamp') -> None:
         super().clean()
+
+        if self.end_date and self.end_date < self.start_date:
+            raise ValidationError(
+                'Дата окончания не может быть раньше даты начала.')
+
         user = getattr(self, 'user', None)
         if user is not None:
             model_class = self.__class__

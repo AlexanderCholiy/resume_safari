@@ -18,7 +18,7 @@ router.register(
 router.register(r'locations', views.LocationViewSet, basename='location')
 router.register(r'positions', views.PositionViewSet, basename='position')
 router.register(r'users', views.UserViewSet, basename='users')
-# router.register(r'resumes', views.ResumeViewSet, basename='resume')
+router.register(r'resumes', views.ResumeViewSet, basename='resume')
 
 
 me_view = views.MeViewSet.as_view({
