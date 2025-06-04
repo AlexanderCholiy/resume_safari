@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions, status, mixins
+from rest_framework import viewsets, permissions, status, mixins, filters
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -11,15 +11,8 @@ from rest_framework.request import Request
 from django.contrib.auth.hashers import make_password
 from urllib.parse import urljoin
 from django.db.models import QuerySet, Q
+from django_filters.rest_framework import DjangoFilterBackend
 
-from user.models import (
-    HardSkillName,
-    SoftSkillName,
-    Location,
-    User,
-    Resume,
-    Position,
-)
 from .serializers import (
     HardSkillNameSerializer,
     SoftSkillNameSerializer,
@@ -32,11 +25,32 @@ from .serializers import (
     PasswordChangeSerializer,
 )
 from .permissions import StaffOrReadOnly, IsOwnerOrReadOnly, IsOwner
+from .pagination import (
+    LocationPagination,
+    SkillPagination,
+    PositionPagination,
+    ResumePagination,
+)
+from user.models import (
+    HardSkillName,
+    SoftSkillName,
+    Location,
+    User,
+    Resume,
+    Position,
+)
 from services.models import PendingUser
 from core.config import WebConfig
 
 
 class UserAuthViewSet(viewsets.ViewSet):
+    """
+    ViewSet для регистрации пользователей и активации аккаунта через
+    email-ссылку.
+    - POST /register — регистрация нового пользователя.
+    - GET /activate/<uidb64>/<token>/ — активация пользователя по ссылке из
+    письма.
+    """
     @action(
         detail=False,
         methods=['post'],
@@ -113,7 +127,14 @@ class UserAuthViewSet(viewsets.ViewSet):
 
 
 class MeViewSet(viewsets.ViewSet):
-    permission_classes = (IsOwner,)
+    """
+    Управления текущим пользователем.
+    - GET /me/ — получение информации о себе.
+    - PATCH /me/ — частичное обновление профиля.
+    - DELETE /me/ — удаление аккаунта.
+    - GET /me/email-confirm/<uidb64>/<token>/ — подтверждение нового email.
+    """
+    permission_classes = (permissions.IsAuthenticated, IsOwner,)
 
     def get_object(self: 'MeViewSet') -> User:
         return self.request.user
@@ -184,7 +205,7 @@ class MeViewSet(viewsets.ViewSet):
         detail=False,
         methods=['get'],
         url_path=r'email-confirm/(?P<uidb64>[^/]+)/(?P<token>[^/]+)',
-        permission_classes=(IsOwner,),
+        permission_classes=(permissions.IsAuthenticated, IsOwner,),
         name='me-confirm-email'
     )
     def confirm_email(
@@ -221,10 +242,14 @@ class MeViewSet(viewsets.ViewSet):
 
 
 class PasswordViewSet(viewsets.ViewSet):
+    """
+    Смена пароля текущим авторизованным пользователем.
+    - POST /password/change/ — смена пароля.
+    """
     @action(
         detail=False,
         methods=['post'],
-        permission_classes=(IsOwner,)
+        permission_classes=(permissions.IsAuthenticated, IsOwner,)
     )
     def change(self: 'PasswordViewSet', request: Request) -> Response:
         serializer = PasswordChangeSerializer(
@@ -236,44 +261,129 @@ class PasswordViewSet(viewsets.ViewSet):
 
 
 class HardSkillNameViewSet(viewsets.ModelViewSet):
+    """
+    Управление хард скиллами.
+    - Только для staff-пользователей доступно создание, редактирование и
+    удаление.
+    - Все пользователи могут просматривать.
+    - Поиск по названию.
+    - Поддержка пагинации.
+    """
     queryset = HardSkillName.objects.all()
     serializer_class = HardSkillNameSerializer
     permission_classes = (StaffOrReadOnly,)
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter,)
+    search_fields = ('name',)
+    pagination_class = SkillPagination
 
 
 class SoftSkillNameViewSet(viewsets.ModelViewSet):
+    """
+    Управление софт скиллами.
+    - Только для staff-пользователей доступно создание, редактирование и
+    удаление.
+    - Все пользователи могут просматривать.
+    - Поиск по названию.
+    - Поддержка пагинации.
+    """
     queryset = SoftSkillName.objects.all()
     serializer_class = SoftSkillNameSerializer
     permission_classes = (StaffOrReadOnly,)
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter,)
+    search_fields = ('name',)
+    pagination_class = SkillPagination
 
 
 class LocationViewSet(viewsets.ModelViewSet):
+    """
+    Управление геолокациями.
+    - Только для staff-пользователей доступно создание, редактирование и
+    удаление.
+    - Поиск и фильтрация по стране и городу.
+    - Сортировка по стране и городу.
+    - Поддержка пагинации.
+    """
     queryset = Location.objects.all()
     serializer_class = LocationSerializer
     permission_classes = (StaffOrReadOnly,)
+    filter_backends = (
+        DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter,
+    )
+    filterset_fields = ('country',)
+    search_fields = ('city',)
+    ordering_fields = ('country', 'city',)
+    pagination_class = LocationPagination
 
 
 class PositionViewSet(viewsets.ModelViewSet):
+    """
+    Управление должностями.
+    - Только для staff-пользователей доступно создание, редактирование
+    и удаление.
+    - Поиск и фильтрация по категории и названию должности.
+    - Сортировка по категории и должности.
+    - Поддержка пагинации.
+    """
     queryset = Position.objects.all()
     serializer_class = PositionSerializer
     permission_classes = (StaffOrReadOnly,)
+    filter_backends = (
+        DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter,
+    )
+    filterset_fields = ('category',)
+    search_fields = ('position',)
+    ordering_fields = ('category', 'position',)
+    pagination_class = PositionPagination
 
 
 class UserViewSet(
     mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet
 ):
+    """
+    Представление для получения и обновления данных только текущего
+    пользователя.
+    - Только авторизованный пользователь может получить или обновить свои
+    данные.
+    """
     serializer_class = UserSerializer
-    permission_classes = (IsOwner,)
+    permission_classes = (permissions.IsAuthenticated, IsOwner,)
 
     def get_queryset(self: 'UserViewSet') -> QuerySet[User]:
         return User.objects.filter(pk=self.request.user.pk)
 
 
 class ResumeViewSet(viewsets.ModelViewSet):
+    """
+    Управления резюме.
+
+    - Анонимные пользователи видят только опубликованные и активные резюме.
+    - Авторизованные пользователи также видят свои неопубликованные резюме.
+    - Только владелец может редактировать или удалять своё резюме.
+
+    Возможности:
+    - Поиск по имени пользователя, фамилии, отчеству и названию должности.
+    - Фильтрация по категории позиции, стране и городу пользователя.
+    - Поддержка пагинации.
+    - Доступ по `slug` вместо `id`.
+    """
     lookup_field = 'slug'
     queryset = Resume.objects.all()
     serializer_class = ResumeSerializer
     permission_classes = (IsOwnerOrReadOnly,)
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
+    filterset_fields = (
+        'position__category',
+        'user__location__country',
+        'user__location__city',
+    )
+    pagination_class = ResumePagination
+    search_fields = (
+        '=user__username',
+        '=user__last_name',
+        '=user__first_name',
+        '=user__patronymic',
+        'position__position',
+    )
 
     def get_queryset(self: 'ResumeViewSet') -> QuerySet[Resume]:
         user = self.request.user

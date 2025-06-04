@@ -3,6 +3,7 @@ import datetime as dt
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
+from drf_extra_fields.fields import Base64ImageField
 
 from .constants import MIN_AGE, MAX_AGE
 from user.models import (
@@ -163,7 +164,7 @@ class UserSerializer(serializers.ModelSerializer, UserValidationMixin):
     """
     educations = EducationSerializer(many=True, required=False)
     experiences = ExperienceSerializer(many=True, required=False)
-    location = LocationSerializer(source='location', read_only=True)
+    location = LocationSerializer(read_only=True)
     location_id = serializers.PrimaryKeyRelatedField(
         queryset=Location.objects.all(),
         required=False,
@@ -171,6 +172,7 @@ class UserSerializer(serializers.ModelSerializer, UserValidationMixin):
         write_only=True,
     )
     age = serializers.SerializerMethodField(read_only=True)
+    avatar = Base64ImageField(required=False, allow_null=True)
 
     class Meta:
         model = User
