@@ -119,7 +119,11 @@ class EducationSerializer(serializers.ModelSerializer):
 
         if end_date and start_date and end_date < start_date:
             raise serializers.ValidationError(
-                {'end_date': 'Дата окончания не может быть раньше даты начала.'}
+                {
+                    'end_date': (
+                        'Дата окончания не может быть раньше даты начала.'
+                    )
+                }
             )
         return data
 
@@ -142,7 +146,11 @@ class ExperienceSerializer(serializers.ModelSerializer):
 
         if end_date and start_date and end_date < start_date:
             raise serializers.ValidationError(
-                {'end_date': 'Дата окончания не может быть раньше даты начала.'}
+                {
+                    'end_date': (
+                        'Дата окончания не может быть раньше даты начала.'
+                    )
+                }
             )
         return data
 
@@ -300,24 +308,7 @@ class UserInResumeSerializer(serializers.ModelSerializer):
         )
 
 
-class ResumeFromContextDefault:
-    requires_context = True
-
-    def set_context(
-        self: 'ResumeFromContextDefault', serializer_field: serializers.Field
-    ) -> None:
-        self.resume = serializer_field.context.get('resume')
-
-    def __call__(self: 'ResumeFromContextDefault') -> Resume:
-        if not self.resume:
-            raise serializers.ValidationError(
-                'Resume не передан через контекст.')
-        return self.resume
-
-
 class HardSkillSerializer(serializers.ModelSerializer):
-    resume = serializers.HiddenField(
-        default=ResumeFromContextDefault())
     skill = HardSkillNameSerializer(read_only=True)
     skill_id = serializers.PrimaryKeyRelatedField(
         queryset=HardSkillName.objects.all(), write_only=True, source='skill'
@@ -325,20 +316,10 @@ class HardSkillSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HardSkill
-        fields = ('resume', 'skill', 'skill_id', 'grid_column', 'grid_row',)
-        validators = [
-            serializers.UniqueTogetherValidator(
-                queryset=HardSkill.objects.all(),
-                fields=('resume', 'skill')
-            )
-        ]
-
-    def create(self: 'HardSkillSerializer', validated_data: dict) -> HardSkill:
-        return HardSkill.objects.create(**validated_data)
+        fields = ('skill', 'skill_id', 'grid_column', 'grid_row',)
 
 
 class SoftSkillSerializer(serializers.ModelSerializer):
-    resume = serializers.HiddenField(default=ResumeFromContextDefault())
     skill = SoftSkillNameSerializer(read_only=True)
     skill_id = serializers.PrimaryKeyRelatedField(
         queryset=SoftSkillName.objects.all(), write_only=True, source='skill'
@@ -346,31 +327,20 @@ class SoftSkillSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SoftSkill
-        fields = ('resume', 'skill', 'skill_id', 'grid_column', 'grid_row',)
-        validators = [
-            serializers.UniqueTogetherValidator(
-                queryset=SoftSkill.objects.all(),
-                fields=('resume', 'skill')
-            )
-        ]
-
-    def create(self: 'SoftSkillSerializer', validated_data: dict) -> SoftSkill:
-        return SoftSkill.objects.create(**validated_data)
+        fields = ('skill', 'skill_id', 'grid_column', 'grid_row',)
 
 
 class ResumeSerializer(serializers.ModelSerializer, UserValidationMixin):
-    user = UserInResumeSerializer(read_only=True)
     position = PositionSerializer(read_only=True)
     position_id = serializers.PrimaryKeyRelatedField(
         queryset=Position.objects.all(),
         required=True,
         write_only=True,
+        source='position'
     )
     educations = EducationSerializer(many=True, required=False)
     experiences = ExperienceSerializer(many=True, required=False)
-    print('-' * 50)
     hard_skills = HardSkillSerializer(many=True, required=False)
-    print('+' * 50)
     soft_skills = SoftSkillSerializer(many=True, required=False)
 
     class Meta:
@@ -388,7 +358,6 @@ class ResumeSerializer(serializers.ModelSerializer, UserValidationMixin):
             'soft_skills',
         )
         read_only_fields = ('slug',)
-
         validators = [
             serializers.UniqueTogetherValidator(
                 queryset=Resume.objects.all(),
@@ -396,9 +365,38 @@ class ResumeSerializer(serializers.ModelSerializer, UserValidationMixin):
             )
         ]
 
+    def __init__(
+        self: 'ResumeSerializer', *args: tuple, **kwargs: dict
+    ) -> None:
+        super().__init__(*args, **kwargs)
+        request = self.context.get('request', None)
+        if request and request.method != 'GET':
+            self.fields['user'] = serializers.HiddenField(
+                default=serializers.CurrentUserDefault())
+        else:
+            self.fields['user'] = UserInResumeSerializer(
+                read_only=True)
+
+    def validate(self: 'ResumeSerializer', attrs: dict) -> dict:
+        request = self.context['request']
+        user: User = request.user
+        attrs['user'] = user
+
+        if request.method == 'POST':
+            position = attrs.get('position')
+            if position is None:
+                raise serializers.ValidationError(
+                    {'position_id': 'Это поле обязательно.'}
+                )
+        else:
+            position = attrs.get(
+                'position', getattr(self.instance, 'position', None))
+
+        return super().validate(attrs)
+
     def create(self: 'ResumeSerializer', validated_data: dict) -> Resume:
-        educations: list[dict] = validated_data.pop('educations', [])
-        experiences: list[dict] = validated_data.pop('experiences', [])
+        educations = validated_data.pop('educations', [])
+        experiences = validated_data.pop('experiences', [])
         hard_skills = validated_data.pop('hard_skills', [])
         soft_skills = validated_data.pop('soft_skills', [])
 
@@ -437,30 +435,31 @@ class ResumeSerializer(serializers.ModelSerializer, UserValidationMixin):
             created_experiences.append(experience)
         resume.experiences.add(*created_experiences)
 
+        skills_seen = set()
         for data in hard_skills:
-            serializer = HardSkillSerializer(
-                data=data,
-                context={**self.context, 'resume': resume}
-            )
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
+            skill = data.get('skill')
+            if skill in skills_seen:
+                raise serializers.ValidationError(
+                    'Дублирование hard_skill в одном резюме запрещено.')
+            skills_seen.add(skill)
+            HardSkill.objects.create(resume=resume, **data)
 
+        skills_seen = set()
         for data in soft_skills:
-            serializer = SoftSkillSerializer(
-                data=data,
-                context={**self.context, 'resume': resume}
-            )
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
+            skill = data.get('skill')
+            if skill in skills_seen:
+                raise serializers.ValidationError(
+                    'Дублирование soft_skill в одном резюме запрещено.')
+            skills_seen.add(skill)
+            SoftSkill.objects.create(resume=resume, **data)
 
         return resume
 
     def update(
         self: 'ResumeSerializer', instance: Resume, validated_data: dict
     ) -> Resume:
-        print('?' * 50)
-        educations: list[dict] = validated_data.pop('educations', None)
-        experiences: list[dict] = validated_data.pop('experiences', None)
+        educations = validated_data.pop('educations', None)
+        experiences = validated_data.pop('experiences', None)
         hard_skills = validated_data.pop('hard_skills', None)
         soft_skills = validated_data.pop('soft_skills', None)
 
@@ -472,14 +471,9 @@ class ResumeSerializer(serializers.ModelSerializer, UserValidationMixin):
 
         if educations is not None:
             resume_educations = []
-
             for data in educations:
                 self.validate_education_data(data)
-                key = (
-                    data.get('institution'),
-                    data.get('start_date'),
-                )
-
+                key = (data.get('institution'), data.get('start_date'))
                 education, _ = Education.objects.update_or_create(
                     user=user,
                     institution=key[0],
@@ -491,20 +485,14 @@ class ResumeSerializer(serializers.ModelSerializer, UserValidationMixin):
                     }
                 )
                 resume_educations.append(education)
-
             instance.educations.clear()
             instance.educations.add(*resume_educations)
 
         if experiences is not None:
             resume_experiences = []
-
             for data in experiences:
                 self.validate_experience_data(data)
-                key = (
-                    data.get('company'),
-                    data.get('start_date'),
-                )
-
+                key = (data.get('company'), data.get('start_date'))
                 experience, _ = Experience.objects.update_or_create(
                     user=user,
                     company=key[0],
@@ -516,29 +504,35 @@ class ResumeSerializer(serializers.ModelSerializer, UserValidationMixin):
                     }
                 )
                 resume_experiences.append(experience)
-
             instance.experiences.clear()
             instance.experiences.add(*resume_experiences)
 
         if hard_skills is not None:
+            skills_seen = set()
+            for data in hard_skills:
+                skill = data.get('skill')
+                if skill in skills_seen:
+                    raise serializers.ValidationError(
+                        'Дублирование hard_skill в одном резюме запрещено.')
+                skills_seen.add(skill)
+
             instance.hard_skills.all().delete()
             for data in hard_skills:
-                print({**self.context, 'resume': instance})
-                serializer = HardSkillSerializer(
-                    data=data,
-                    context={**self.context, 'resume': instance}
-                )
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
+                skill = data.get('skill')
+                HardSkill.objects.create(resume=instance, **data)
 
         if soft_skills is not None:
+            skills_seen = set()
+            for data in soft_skills:
+                skill = data.get('skill')
+                if skill in skills_seen:
+                    raise serializers.ValidationError(
+                        'Дублирование soft_skill в одном резюме запрещено.')
+                skills_seen.add(skill)
+
             instance.soft_skills.all().delete()
             for data in soft_skills:
-                serializer = SoftSkillSerializer(
-                    data=data,
-                    context={**self.context, 'resume': instance}
-                )
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
+                skill = data.get('skill')
+                SoftSkill.objects.create(resume=instance, **data)
 
         return instance

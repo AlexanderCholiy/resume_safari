@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions, status, exceptions, mixins
+from rest_framework import viewsets, permissions, status, mixins
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -40,7 +40,7 @@ class UserAuthViewSet(viewsets.ViewSet):
     @action(
         detail=False,
         methods=['post'],
-        permission_classes=[permissions.AllowAny]
+        permission_classes=(permissions.AllowAny,)
     )
     def register(self: 'UserAuthViewSet', request: Request) -> Response:
         serializer = PendingUserSerializer(data=request.data)
@@ -56,7 +56,7 @@ class UserAuthViewSet(viewsets.ViewSet):
         detail=False,
         methods=['get'],
         url_path='activate/(?P<uidb64>[^/]+)/(?P<token>[^/]+)',
-        permission_classes=[permissions.AllowAny]
+        permission_classes=(permissions.AllowAny,)
     )
     def activate(
         self: 'UserAuthViewSet',
@@ -113,7 +113,7 @@ class UserAuthViewSet(viewsets.ViewSet):
 
 
 class MeViewSet(viewsets.ViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = (IsOwner,)
 
     def get_object(self: 'MeViewSet') -> User:
         return self.request.user
@@ -184,7 +184,7 @@ class MeViewSet(viewsets.ViewSet):
         detail=False,
         methods=['get'],
         url_path=r'email-confirm/(?P<uidb64>[^/]+)/(?P<token>[^/]+)',
-        permission_classes=[permissions.IsAuthenticated],
+        permission_classes=(IsOwner,),
         name='me-confirm-email'
     )
     def confirm_email(
@@ -224,7 +224,7 @@ class PasswordViewSet(viewsets.ViewSet):
     @action(
         detail=False,
         methods=['post'],
-        permission_classes=[permissions.IsAuthenticated]
+        permission_classes=(IsOwner,)
     )
     def change(self: 'PasswordViewSet', request: Request) -> Response:
         serializer = PasswordChangeSerializer(
@@ -256,14 +256,14 @@ class LocationViewSet(viewsets.ModelViewSet):
 class PositionViewSet(viewsets.ModelViewSet):
     queryset = Position.objects.all()
     serializer_class = PositionSerializer
-    permission_classes = (permissions.IsAuthenticated, StaffOrReadOnly,)
+    permission_classes = (StaffOrReadOnly,)
 
 
 class UserViewSet(
     mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet
 ):
     serializer_class = UserSerializer
-    permission_classes = (permissions.IsAuthenticated, IsOwner)
+    permission_classes = (IsOwner,)
 
     def get_queryset(self: 'UserViewSet') -> QuerySet[User]:
         return User.objects.filter(pk=self.request.user.pk)
@@ -273,7 +273,7 @@ class ResumeViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
     queryset = Resume.objects.all()
     serializer_class = ResumeSerializer
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = (IsOwnerOrReadOnly,)
 
     def get_queryset(self: 'ResumeViewSet') -> QuerySet[Resume]:
         user = self.request.user
