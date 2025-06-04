@@ -21,7 +21,7 @@ body.dark .about-container {
 }
 
 .about-paragraph {
-  font-size: 1rem;
+  font-size: 1.1rem;
   margin-bottom: 1rem;
 }
 
@@ -51,4 +51,37 @@ body.dark .about-link {
   .about-paragraph {
     font-size: 0.95rem;
   }
+}
+
+.about-doc-links {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.about-doc-links li {
+  margin-bottom: 0.7em;
+}
+
+.about-doc-links a.about-link {
+  display: inline-block;
+  margin-left: 0.5em;
+  text-decoration: underline;
+  color: var(--dark-red-color);
+}
+
+.about-doc-links a.about-link:hover {
+  color: var(--light-red-color);
+}
+
+body.dark .about-doc-links a.about-link {
+  color: var(--light-blue-color);
+}
+
+body.dark .about-doc-links a.about-link:hover {
+  color: var(--dark-blue-color);
+}
+
+.doc-label {
+  font-weight: 600;
 }

@@ -16,11 +16,30 @@
       href="{% static 'css/paginator.css' %}"
       >
   {% endif %}
+  {% if request.resolver_match.view_name  == 'user:resume_list' %}
+    <link 
+      rel="stylesheet" 
+      href="{% static 'css/resume_list/search_filter.css' %}"
+      >
+  {% endif %}
 {% endblock %}
 
 {% block content %}
+
+  {% if request.resolver_match.view_name  == 'user:resume_list' %}
+    {% include "resume/includes/resume_search_filter.html" %}
+  {% endif %}
+
   {% for resume in page_obj %}
     {% include "resume/includes/short_summary.html" %}
   {% endfor %}
+
+  {% if not page_obj %}
+    <div class="empty-message-card">
+      По заданным фильтрам ничего не найдено
+    </div>
+  {% endif %}
+
   {% include "includes/paginator.html" %}
+
 {% endblock %}

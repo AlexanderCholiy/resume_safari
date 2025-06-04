@@ -89,6 +89,23 @@ body.dark .resume-meta .btn-details:hover {
   background-color: var(--light-red-color);
 }
 
+.empty-message-card {
+  max-width: 600px;
+  margin: 3rem auto;
+  background-color: var(--light-background-color);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  color: var(--dark-gray-color);
+  transition: background-color var(--transition-value);
+}
+
+body.dark .empty-message-card {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+    background-color: var(--dark-background-color);
+    color: var(--light-gray-color);
+}
+
 @media (max-width: 768px) {
   .resume-info, .resume-meta {
     flex: 1 1 100%;

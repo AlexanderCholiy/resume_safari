@@ -28,8 +28,22 @@
     Проект создавался с целью практики и углубления знаний в области веб-разработки, а также в работе с REST API и авторизацией пользователей.
   </p>
 
-  <p class="about-paragraph">
-    Ссылка на документацию API: <a href="/api/" class="about-link">/api/</a>
-  </p>
+  <div class="about-paragraph">
+    <p>Ссылки на документацию API:</p>
+    <ul class="about-doc-links">
+      <li>
+        <span class="doc-label">Swagger:</span>
+        <a href="{{ request.scheme }}://{{ request.get_host }}{{ prefix }}swagger/" class="about-link">
+          {{ request.scheme }}://{{ request.get_host }}{{ prefix }}swagger/
+        </a>
+      </li>
+      <li>
+        <span class="doc-label">ReDoc:</span>
+        <a href="{{ request.scheme }}://{{ request.get_host }}{{ prefix }}redoc/" class="about-link">
+          {{ request.scheme }}://{{ request.get_host }}{{ prefix }}redoc/
+        </a>
+      </li>
+    </ul>
+  </div>
 </div> 
 {% endblock %}

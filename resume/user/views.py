@@ -1,10 +1,10 @@
 from django.views.generic import ListView, DetailView
 from django.contrib.auth import get_user_model
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Q, Count
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Resume, HardSkill, SoftSkill
-from .constants import MAX_RESUMES_PER_PAGE
+from .models import Resume, HardSkill, SoftSkill, Location, Position
+from .constants import MAX_RESUME_PER_PAGE_ON_FRONT
 from core.utils import build_grid, grid_contains_any_items
 
 
@@ -14,21 +14,67 @@ User = get_user_model()
 class ResumeListView(ListView):
     model = Resume
     template_name = 'resume/index.html'
-    paginate_by = MAX_RESUMES_PER_PAGE
+    paginate_by = MAX_RESUME_PER_PAGE_ON_FRONT
 
     def get_queryset(self: 'ResumeListView') -> 'QuerySet[Resume]':
-        return (
+        queryset = (
             Resume.objects
             .filter(user__is_active=True, is_published=True)
             .select_related('user', 'user__location', 'position')
             .order_by('-created_at', 'pk')
         )
 
+        search_query = self.request.GET.get('q', '').strip()
+        country = self.request.GET.get('country')
+        category = self.request.GET.get('category')
+
+        if search_query:
+            queryset = queryset.filter(
+                Q(user__last_name__contains=search_query) |
+                Q(user__first_name__contains=search_query) |
+                Q(user__patronymic__contains=search_query) |
+                Q(user__username=search_query) |
+                Q(position__position__contains=search_query)
+            )
+
+        if country:
+            queryset = queryset.filter(user__location__country=country)
+
+        if category:
+            queryset = queryset.filter(position__category=category)
+
+        return queryset
+
+    def get_context_data(self: 'ResumeListView', **kwargs: dict) -> dict:
+        context = super().get_context_data(**kwargs)
+        context['search_query'] = self.request.GET.get('q', '')
+        context['selected_country'] = self.request.GET.get('country', '')
+        context['selected_category'] = self.request.GET.get('category', '')
+
+        context['countries'] = (
+            Location.objects
+            .filter(users__resume__is_published=True, users__is_active=True)
+            .exclude(country__isnull=True)
+            .exclude(country__exact='')
+            .values_list('country', flat=True)
+            .distinct()
+            .order_by('country')
+        )
+        context['categories'] = (
+            Position.objects
+            .filter(resume__is_published=True, resume__user__is_active=True)
+            .values_list('category', flat=True)
+            .distinct()
+            .order_by('category')
+        )
+
+        return context
+
 
 class MyResumeListView(LoginRequiredMixin, ListView):
     model = Resume
     template_name = 'resume/index.html'
-    paginate_by = MAX_RESUMES_PER_PAGE
+    paginate_by = MAX_RESUME_PER_PAGE_ON_FRONT
     login_url = 'login'
 
     def get_queryset(self: 'MyResumeListView') -> QuerySet:
