@@ -1,7 +1,7 @@
 class ConfigEnvError(Exception):
     """Ошибка: отсутствуют необходимые переменные окружения."""
 
-    def __init__(self, missing_vars: list[str]):
+    def __init__(self: 'ConfigEnvError', missing_vars: list[str]) -> None:
         joined_vars = '\n- '.join(missing_vars)
         message = (
             'Ошибка конфигурации: отсутствуют переменные окружения:\n'
@@ -13,7 +13,7 @@ class ConfigEnvError(Exception):
 class ConfigDirError(Exception):
     """Ошибка: указанные директории не существуют."""
 
-    def __init__(self, missing_dirs: list[str]):
+    def __init__(self: 'ConfigEnvError', missing_dirs: list[str]) -> None:
         joined_dirs = '\n- '.join(missing_dirs)
         message = (
             'Ошибка конфигурации: не найдены следующие директории:\n'
@@ -25,7 +25,7 @@ class ConfigDirError(Exception):
 class ConfigFileError(Exception):
     """Ошибка: указанные файлы не существуют."""
 
-    def __init__(self, missing_files: list[str]):
+    def __init__(self: 'ConfigEnvError', missing_files: list[str]) -> None:
         joined_files = '\n- '.join(missing_files)
         message = (
             'Ошибка конфигурации: не найдены следующие файлы:\n'

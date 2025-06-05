@@ -1,15 +1,11 @@
-from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 
-from .constants import (
-    MAX_GRID_SIZE_X,
-    MAX_GRID_SIZE_Y,
-    MAX_SKILL_DESCRIPTION_LENGTH,
-    MAX_SKILL_NAME_LENGTH,
-    DEFAULT_GRID_ROW_AND_COLUMN,
-    MAX_EDUCATION_AND_EXPERIENCE,
-)
+from .constants import (DEFAULT_GRID_ROW_AND_COLUMN,
+                        MAX_EDUCATION_AND_EXPERIENCE, MAX_GRID_SIZE_X,
+                        MAX_GRID_SIZE_Y, MAX_SKILL_DESCRIPTION_LENGTH,
+                        MAX_SKILL_NAME_LENGTH)
 
 
 class Grid(models.Model):

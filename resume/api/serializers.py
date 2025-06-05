@@ -1,24 +1,15 @@
 import datetime as dt
 
-from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password
-from rest_framework import serializers
+from django.contrib.auth.password_validation import validate_password
 from drf_extra_fields.fields import Base64ImageField
-
-from .constants import MIN_AGE, MAX_AGE
-from user.models import (
-    HardSkillName,
-    SoftSkillName,
-    Location,
-    Position,
-    Education,
-    Experience,
-    User,
-    Resume,
-    SoftSkill,
-    HardSkill,
-)
+from rest_framework import serializers
 from services.models import PendingUser
+from user.models import (Education, Experience, HardSkill, HardSkillName,
+                         Location, Position, Resume, SoftSkill, SoftSkillName,
+                         User)
+
+from .constants import MAX_AGE, MIN_AGE
 from .mixins import UserValidationMixin
 
 

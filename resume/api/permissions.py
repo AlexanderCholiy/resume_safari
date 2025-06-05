@@ -1,5 +1,3 @@
-from typing import Any
-
 from rest_framework import permissions
 from rest_framework.request import Request
 from rest_framework.views import View
@@ -17,7 +15,7 @@ class StaffOrReadOnly(permissions.BasePermission):
         ) and request.user.is_active
 
     def has_object_permission(
-        self: 'StaffOrReadOnly', request: Request, view: View, obj: Any
+        self: 'StaffOrReadOnly', request: Request, view: View, obj: object
     ) -> bool:
         if request.method in permissions.SAFE_METHODS:
             return True
@@ -29,7 +27,7 @@ class StaffOrReadOnly(permissions.BasePermission):
 class IsOwnerOrReadOnly(permissions.BasePermission):
 
     def has_object_permission(
-        self: 'IsOwnerOrReadOnly', request: 'Request', view: View, obj: Any
+        self: 'IsOwnerOrReadOnly', request: 'Request', view: View, obj: object
     ) -> bool:
         if request.method in permissions.SAFE_METHODS:
             return True
@@ -38,6 +36,6 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 
 class IsOwner(permissions.BasePermission):
     def has_object_permission(
-        self: 'IsOwner', request: 'Request', view: View, obj: Any
+        self: 'IsOwner', request: 'Request', view: View, obj: object
     ) -> bool:
         return obj == request.user

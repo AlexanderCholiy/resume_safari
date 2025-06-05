@@ -1,46 +1,31 @@
-from rest_framework import viewsets, permissions, status, mixins, filters
-from django.utils.encoding import force_bytes, force_str
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.urls import reverse
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from django.core.mail import send_mail
-from django.conf import settings
-from rest_framework.request import Request
-from django.contrib.auth.hashers import make_password
 from urllib.parse import urljoin
-from django.db.models import QuerySet, Q
-from django_filters.rest_framework import DjangoFilterBackend
 
-from .serializers import (
-    HardSkillNameSerializer,
-    SoftSkillNameSerializer,
-    LocationSerializer,
-    UserSerializer,
-    ResumeSerializer,
-    PositionSerializer,
-    PendingUserSerializer,
-    UserMeSerializer,
-    PasswordChangeSerializer,
-)
-from .permissions import StaffOrReadOnly, IsOwnerOrReadOnly, IsOwner
-from .pagination import (
-    LocationPagination,
-    SkillPagination,
-    PositionPagination,
-    ResumePagination,
-)
-from user.models import (
-    HardSkillName,
-    SoftSkillName,
-    Location,
-    User,
-    Resume,
-    Position,
-)
-from services.models import PendingUser
 from core.config import WebConfig
+from django.conf import settings
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.db.models import Q, QuerySet
+from django.urls import reverse
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, mixins, permissions, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.request import Request
+from rest_framework.response import Response
+from services.models import PendingUser
+from user.models import (HardSkillName, Location, Position, Resume,
+                         SoftSkillName, User)
+
+from .pagination import (LocationPagination, PositionPagination,
+                         ResumePagination, SkillPagination)
+from .permissions import IsOwner, IsOwnerOrReadOnly, StaffOrReadOnly
+from .serializers import (HardSkillNameSerializer, LocationSerializer,
+                          PasswordChangeSerializer, PendingUserSerializer,
+                          PositionSerializer, ResumeSerializer,
+                          SoftSkillNameSerializer, UserMeSerializer,
+                          UserSerializer)
 
 
 class UserAuthViewSet(viewsets.ViewSet):
@@ -117,7 +102,7 @@ class UserAuthViewSet(viewsets.ViewSet):
             f'Здравствуйте, {pending_user.username}!\n\n'
             'Вы указали этот адрес при регистрации на '
             f'{WebConfig.FULL_SITE_URL}.\n'
-            f'Для подтверждения перейдите по ссылке:\n{activation_link}\n\n'
+            f'Для подтверждения перейдите по ссылке: \n{activation_link}\n\n'
             f'Срок действия ссылки — 1 день.\n\n'
             f'Если вы не регистрировались — просто проигнорируйте это письмо.'
         )

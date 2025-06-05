@@ -1,12 +1,11 @@
 import os
-from typing import Final, Optional
 from datetime import timedelta
+from typing import Final, Optional
 from urllib.parse import urljoin
 
 from dotenv import load_dotenv
 
-from .exceptions import ConfigEnvError, ConfigDirError, ConfigFileError
-
+from .exceptions import ConfigDirError, ConfigEnvError, ConfigFileError
 
 ROOT_DIR: Final[str] = os.path.normpath(
     os.path.join(os.path.dirname(__file__), '..', '..'))

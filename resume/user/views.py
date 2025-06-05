@@ -1,12 +1,11 @@
-from django.views.generic import ListView, DetailView
-from django.contrib.auth import get_user_model
-from django.db.models import QuerySet, Q
-from django.contrib.auth.mixins import LoginRequiredMixin
-
-from .models import Resume, HardSkill, SoftSkill, Location, Position
-from .constants import MAX_RESUME_PER_PAGE_ON_FRONT
 from core.utils import build_grid, grid_contains_any_items
+from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q, QuerySet
+from django.views.generic import DetailView, ListView
 
+from .constants import MAX_RESUME_PER_PAGE_ON_FRONT
+from .models import HardSkill, Location, Position, Resume, SoftSkill
 
 User = get_user_model()
 
@@ -33,15 +32,15 @@ class ResumeListView(ListView):
             name_filter = Q()
             for word in words:
                 name_filter &= (
-                    Q(user__first_name__icontains=word) |
-                    Q(user__last_name__icontains=word) |
-                    Q(user__patronymic__icontains=word)
+                    Q(user__first_name__icontains=word)
+                    | Q(user__last_name__icontains=word)
+                    | Q(user__patronymic__icontains=word)
                 )
 
             queryset = queryset.filter(
-                name_filter |
-                Q(user__username__iexact=search_query) |
-                Q(position__position__icontains=search_query)
+                name_filter
+                | Q(user__username__iexact=search_query)
+                | Q(position__position__icontains=search_query)
             )
 
         if country:

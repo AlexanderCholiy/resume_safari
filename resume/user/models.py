@@ -1,29 +1,20 @@
-from django.db import models
+from core.models import Grid, NormalizedPairModel, Skill, Timestamp
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
+from django.core.files.storage import default_storage
+from django.core.validators import MaxLengthValidator
+from django.db import models
+from django.utils import timezone
 from django.utils.text import slugify
 from unidecode import unidecode
-from django.utils import timezone
-from django.core.exceptions import ValidationError
-from django.core.validators import MaxLengthValidator
-from django.core.files.storage import default_storage
 
-from core.models import Grid, Skill, Timestamp, NormalizedPairModel
-from .constants import (
-    MAX_USER_PATRONYMIC_LENGTH,
-    MAX_COUNTRY_LENGTH,
-    MAX_CITY_LENGTH,
-    MAX_GITHUB_LINK_LENGTH,
-    MAX_COMPANY_NAME_LENGTH,
-    MAX_POSITION_LENGTH,
-    MAX_EDUCATION_DEGREE_LENGTH,
-    MAX_FIELD_OF_STUDY_LENGTH,
-    MAX_INSTITUTION_NAME_LENGTH,
-    MAX_PHONE_LENGTH,
-    MAX_SLUG_LENGTH,
-    MAX_CATEGORY_LENGTH,
-    MAX_RESUME_COUNT,
-    MAX_RESUME_TEXT_LENGTH,
-)
+from .constants import (MAX_CATEGORY_LENGTH, MAX_CITY_LENGTH,
+                        MAX_COMPANY_NAME_LENGTH, MAX_COUNTRY_LENGTH,
+                        MAX_EDUCATION_DEGREE_LENGTH, MAX_FIELD_OF_STUDY_LENGTH,
+                        MAX_GITHUB_LINK_LENGTH, MAX_INSTITUTION_NAME_LENGTH,
+                        MAX_PHONE_LENGTH, MAX_POSITION_LENGTH,
+                        MAX_RESUME_COUNT, MAX_RESUME_TEXT_LENGTH,
+                        MAX_SLUG_LENGTH, MAX_USER_PATRONYMIC_LENGTH)
 
 
 class User(AbstractUser):
@@ -83,8 +74,8 @@ class User(AbstractUser):
         if self.date_of_birth:
             today = timezone.now().date()
             return (
-                today.year - self.date_of_birth.year -
-                (
+                today.year - self.date_of_birth.year
+                - (
                     (today.month, today.day) < (
                         self.date_of_birth.month, self.date_of_birth.day)
                 )

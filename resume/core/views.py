@@ -1,9 +1,9 @@
 from typing import Optional
 
-from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse
-from django.urls.exceptions import Resolver404
 from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import render
+from django.urls.exceptions import Resolver404
 
 
 def bad_request(

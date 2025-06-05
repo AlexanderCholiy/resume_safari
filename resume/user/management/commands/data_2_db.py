@@ -2,15 +2,13 @@ import argparse
 
 import pandas as pd
 from colorama import init
-from django.core.management.base import BaseCommand
-from django.core.exceptions import ValidationError
-from django.conf import settings
-
-from user.models import Location, HardSkillName, SoftSkillName, Position
-from core.utils import progress_bar, execution_time
 from core.config import WebConfig
 from core.logger import FileRotatingLogger
-
+from core.utils import execution_time, progress_bar
+from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.management.base import BaseCommand
+from user.models import HardSkillName, Location, Position, SoftSkillName
 
 init(autoreset=True)
 
@@ -74,7 +72,7 @@ class Command(BaseCommand):
         total = len(df)
 
         for index, row in df.iterrows():
-            progress_bar(index, total, f'Импорт данных в {model.__name__}:')
+            progress_bar(index, total, f'Импорт данных в {model.__name__}: ')
 
             cleaned_values = []
             for field in fields:

@@ -2,7 +2,6 @@ from pathlib import Path
 
 from core.config import WebConfig
 
-
 WebConfig.validate()
 
 BASE_DIR = Path(__file__).resolve().parent.parent

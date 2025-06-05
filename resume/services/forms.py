@@ -1,10 +1,10 @@
 from django import forms
-from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from user.models import User
 
 from .models import PendingUser
-from user.models import User
 
 
 class CustomUserCreationForm(forms.ModelForm):

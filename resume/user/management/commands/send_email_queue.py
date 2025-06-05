@@ -1,16 +1,14 @@
 
+import datetime as dt
 import os
 import time
-import datetime as dt
 from email import message_from_file
-
-from django.conf import settings
-from django.core.mail import EmailMessage, get_connection
-from django.core.management.base import BaseCommand
 
 from core.config import WebConfig
 from core.logger import FileRotatingLogger
-
+from django.conf import settings
+from django.core.mail import EmailMessage, get_connection
+from django.core.management.base import BaseCommand
 
 email_logger = FileRotatingLogger(
     WebConfig.LOG_DIR, 'emails.log', debug=settings.DEBUG

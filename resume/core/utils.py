@@ -1,13 +1,12 @@
-import shutil
 import re
-from typing import List, TypeVar, Callable, Any
+import shutil
 from datetime import datetime
+from typing import Callable, List, TypeVar
 
-from django.db.models import QuerySet
 from colorama import Fore, Style
+from django.db.models import QuerySet
 
 from .constants import MAX_GRID_SIZE_X, MAX_GRID_SIZE_Y
-
 
 T = TypeVar('T')
 
@@ -60,7 +59,7 @@ def grid_contains_any_items(grid: list[list[list]]) -> bool:
 def progress_bar(
     iteration: int,
     total: int,
-    message: str = 'Загрузка:',
+    message: str = 'Загрузка: ',
     bar_color: str = Fore.LIGHTGREEN_EX,
 ) -> None:
     if total == 0:
@@ -69,19 +68,19 @@ def progress_bar(
     terminal_width = shutil.get_terminal_size((80, 20)).columns
     iteration += 1
 
-    percent = (iteration / total) * 100
-    count_info = f'[{percent:.2f}% ({iteration}/{total})]'
+    percent = round((iteration / total) * 100, 2)
+    count_info = f'[{percent}% ({iteration}/{total})]'
     bar_length = 30
     right_padding: int = 3
 
     filled_length = int(bar_length * iteration // total)
     bar = (
-        f'{bar_color}█' * filled_length +
-        f'{Fore.LIGHTBLACK_EX}█' * (bar_length - filled_length)
+        f'{bar_color}█' * filled_length
+        + f'{Fore.LIGHTBLACK_EX}█' * (bar_length - filled_length)
     )
     bar_display = f'{Fore.BLACK}|{bar}{Fore.BLACK}|'
 
-    left_part = f'{Fore.BLUE}{message} {Fore.WHITE}{count_info}'
+    left_part = f'{Fore.BLUE}{message}{Fore.WHITE}{count_info}'
     left_length = len(strip_ansi(left_part))
     bar_length_real = len(strip_ansi(bar_display))
     padding = terminal_width - left_length - bar_length_real - right_padding
@@ -102,8 +101,8 @@ def strip_ansi(text: str) -> str:
     return ansi_escape.sub('', text)
 
 
-def execution_time(func: Callable[..., Any]) -> Callable[..., Any]:
-    def wrapper(*args: tuple, **kwargs: dict) -> Any:
+def execution_time(func: Callable[..., T]) -> Callable[..., T]:
+    def wrapper(*args: tuple, **kwargs: dict) -> T:
         start_time = datetime.now()
         try:
             result = func(*args, **kwargs)

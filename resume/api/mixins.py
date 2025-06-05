@@ -1,8 +1,6 @@
-import datetime as dt
 from rest_framework import serializers
-
-from user.models import User
 from services.models import PendingUser
+from user.models import User
 
 
 class UserValidationMixin:

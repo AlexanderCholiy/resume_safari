@@ -1,6 +1,5 @@
 from typing import Final
 
-
 MAX_GRID_SIZE_X: Final[int] = 5
 MAX_GRID_SIZE_Y: Final[int] = 10
 MAX_SKILL_NAME_LENGTH: Final[int] = 150

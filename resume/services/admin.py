@@ -1,9 +1,7 @@
 from django.contrib import admin
-from django.core.handlers.wsgi import WSGIRequest
-from django.db.models.query import QuerySet
 
-from .models import PendingUser
 from .constants import MAX_PENDING_USERS_PER_PAGE
+from .models import PendingUser
 
 
 @admin.register(PendingUser)

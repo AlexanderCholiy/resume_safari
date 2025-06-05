@@ -1,13 +1,13 @@
-from django.core.mail import send_mail
+from core.config import WebConfig
 from django.conf import settings
-from django.urls import reverse
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
 from django.http import HttpRequest
+from django.urls import reverse
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 
 from .models import PendingUser
-from core.config import WebConfig
 
 
 def send_activation_email(
@@ -24,7 +24,7 @@ def send_activation_email(
         f'Здравствуйте, {pending_user.username}!\n\n'
         f'Вы указали этот адрес при регистрации на '
         f'{WebConfig.FULL_SITE_URL}.\n'
-        f'Для подтверждения перейдите по ссылке:\n{activation_link}\n\n'
+        f'Для подтверждения перейдите по ссылке: \n{activation_link}\n\n'
         f'Срок действия ссылки — 1 день.\n\n'
         f'Если вы не регистрировались — просто проигнорируйте это письмо.'
     )

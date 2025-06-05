@@ -1,11 +1,7 @@
 from rest_framework.pagination import PageNumberPagination
 
-from .constants import (
-    MAX_LOCATIONS_PER_REQUEST,
-    MAX_SKILLS_PER_REQUEST,
-    MAX_POSITIONS_PER_REQUEST,
-    MAX_RESUMES_PER_REQUEST,
-)
+from .constants import (MAX_LOCATIONS_PER_REQUEST, MAX_POSITIONS_PER_REQUEST,
+                        MAX_RESUMES_PER_REQUEST, MAX_SKILLS_PER_REQUEST)
 
 
 class LocationPagination(PageNumberPagination):

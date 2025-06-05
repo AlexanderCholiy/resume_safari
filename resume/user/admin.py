@@ -2,19 +2,13 @@ from django.contrib import admin
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models.query import QuerySet
 
-from .models import (
-    User, HardSkill, SoftSkill, Resume, Education, Experience, Location,
-    HardSkillName, SoftSkillName, ResumeExperience, ResumeEducation, Position,
-)
-from .constants import (
-    MAX_USERS_PER_PAGE,
-    MAX_LOCATIONS_PER_PAGE,
-    MAX_SKILLS_PER_PAGE,
-    MAX_EXPERIANCE_PER_PAGE,
-    MAX_EDUCATIONS_PER_PAGE,
-    MAX_RESUMES_PER_PAGE,
-    MAX_POSITION_PER_PAGE,
-)
+from .constants import (MAX_EDUCATIONS_PER_PAGE, MAX_EXPERIANCE_PER_PAGE,
+                        MAX_LOCATIONS_PER_PAGE, MAX_POSITION_PER_PAGE,
+                        MAX_RESUMES_PER_PAGE, MAX_SKILLS_PER_PAGE,
+                        MAX_USERS_PER_PAGE)
+from .models import (Education, Experience, HardSkill, HardSkillName, Location,
+                     Position, Resume, ResumeEducation, ResumeExperience,
+                     SoftSkill, SoftSkillName, User)
 
 
 @admin.register(User)

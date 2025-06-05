@@ -1,8 +1,8 @@
+from core.config import WebConfig
 from django.db import models
 from django.utils import timezone
 
-from .constants import MAX_USERNAME_LEN, MAX_PASSWORD_LEN
-from core.config import WebConfig
+from .constants import MAX_PASSWORD_LEN, MAX_USERNAME_LEN
 
 
 class PendingUser(models.Model):

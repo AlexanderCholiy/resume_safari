@@ -1,7 +1,6 @@
 from django.urls import path
 
-from .views import ResumeListView, ResumeDetailView, MyResumeListView
-
+from .views import MyResumeListView, ResumeDetailView, ResumeListView
 
 app_name = 'user'
 

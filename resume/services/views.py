@@ -1,11 +1,11 @@
-from django.shortcuts import render
-from django.http import HttpRequest, HttpResponse
-from django.utils.http import urlsafe_base64_decode
-from django.utils.encoding import force_str
 from django.contrib.auth.tokens import default_token_generator
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import render
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
+from user.models import User
 
 from .forms import CustomUserCreationForm
-from user.models import User
 from .models import PendingUser
 from .utils import send_activation_email
 
