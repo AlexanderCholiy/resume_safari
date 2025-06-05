@@ -1,0 +1,34 @@
+@font-face {
+  font-family: 'Special';
+  src: url('../fonts/special/ZenOldMincho-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Special';
+  src: url('../fonts/special/ZenOldMincho-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Special';
+  src: url('../fonts/special/ZenOldMincho-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Special';
+  src: url('../fonts/special/ZenOldMincho-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Special';
+  src: url('../fonts/special/ZenOldMincho-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}

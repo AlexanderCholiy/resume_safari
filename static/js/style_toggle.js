@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const styles = ['classic', 'modern'];
+  const styles = ['classic', 'modern', 'special'];
   const styleToggle = document.getElementById('style-toggle');
   const styleIcon = document.getElementById('style-icon');
   const body = document.body;
@@ -7,12 +7,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const styleIcons = {
     classic: 'bx-font',
-    modern: 'bx-bold'
+    modern: 'bx-bold',
+    special: 'bx-heading',
   };
 
   const styleTitles = {
     classic: 'Классический стиль',
-    modern: 'Современный стиль'
+    modern: 'Современный стиль',
+    special: 'Специальный стиль',
   };
 
   const styleFonts = window.STYLE_FONTS;

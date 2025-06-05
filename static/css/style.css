@@ -13,11 +13,15 @@ body {
 }
 
 body.classic-style * {
-  font-family: 'Bellota', sans-serif;
+  font-family: 'Classic', serif;
 }
 
 body.modern-style * {
-  font-family: 'Tektur', sans-serif;
+  font-family: 'Modern', monospace;
+}
+
+body.special-style * {
+    font-family: 'Special', sans-serif;
 }
 
 body.light {

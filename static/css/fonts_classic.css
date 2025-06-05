@@ -1,33 +1,33 @@
 @font-face {
-  font-family: 'Bellota';
+  font-family: 'Classic';
   src: url('../fonts/classic/Bellota-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Bellota';
+  font-family: 'Classic';
   src: url('../fonts/classic/Bellota-Bold.ttf') format('truetype');
   font-weight: bold;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Bellota';
+  font-family: 'Classic';
   src: url('../fonts/classic/Bellota-Italic.ttf') format('truetype');
   font-weight: normal;
   font-style: italic;
 }
 
 @font-face {
-  font-family: 'Bellota';
+  font-family: 'Classic';
   src: url('../fonts/classic/Bellota-BoldItalic.ttf') format('truetype');
   font-weight: bold;
   font-style: italic;
 }
 
 @font-face {
-  font-family: 'Bellota';
+  font-family: 'Classic';
   src: url('../fonts/classic/Bellota-Light.ttf') format('truetype');
   font-weight: 300;
   font-style: normal;

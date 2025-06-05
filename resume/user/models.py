@@ -23,6 +23,7 @@ class User(AbstractUser):
         'Отчество',
         max_length=MAX_USER_PATRONYMIC_LENGTH,
         blank=True,
+        null=True,
     )
     telegram_id = models.SlugField(
         'Имя пользователя в Telegram',
