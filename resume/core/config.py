@@ -60,10 +60,15 @@ class WebConfig(Config):
     STATIC_ROOT: str = os.path.join(ROOT_DIR, 'static_backend_build')
     DATA_DIR: str = os.path.join(ROOT_DIR, 'data')
     DATA_2_DB_PATH: str = os.path.join(DATA_DIR, 'data_2_db.xlsx')
+    EMAIL_DIR: str = os.path.join(ROOT_DIR, 'email_outbox')
 
     SITE_URL: str = 'http://localhost:8000'  # Поменяй в production!
     PREFIX: str = 'resume-safari/'
     FULL_SITE_URL: str = urljoin(SITE_URL, PREFIX)
+    MAX_EMAIL_AGE = timedelta(days=1)
+    MIN_WAIT_EMAIL = timedelta(seconds=30)
+
+    LOG_DIR = os.path.join(ROOT_DIR, 'log')
 
     @staticmethod
     def validate() -> None:

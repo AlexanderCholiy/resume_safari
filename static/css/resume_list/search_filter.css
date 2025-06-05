@@ -10,22 +10,22 @@
 .resume-filter-form input.search-input {
   flex: 1 1 40%;
   min-width: 200px;
-  background-color: var(--light-background-color);
+  background-color: rgba(245, 240, 240, 0.5);
 }
 
 body.dark .resume-filter-form input.search-input {
-  background-color: var(--dark-background-color);
+  background-color: rgba(23, 23, 28, 0.5);
 }
 
 .resume-filter-form select.filter-select {
   flex: 1 1 15%;
   min-width: 150px;
   cursor: pointer;
-  background-color: var(--light-background-color);
+  background-color: rgba(245, 240, 240, 0.5);
 }
 
 body.dark .resume-filter-form select.filter-select {
-  background-color: var(--dark-background-color);
+  background-color: rgba(23, 23, 28, 0.5);
 }
 
 .resume-filter-form input,
@@ -65,12 +65,12 @@ body.dark .resume-filter-form select:focus {
   min-width: 120px;
   cursor: pointer;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
-  background-color: var(--light-add-background-color);
+  background-color: rgba(245, 240, 240, 0.5);
 }
 
 body.dark .resume-filter-form .filter-button {
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
-  background-color: var(--dark-add-background-color);  
+  background-color: rgba(23, 23, 28, 0.5);
 }
 
 .filter-button:hover {

@@ -4,13 +4,19 @@ import pandas as pd
 from colorama import init
 from django.core.management.base import BaseCommand
 from django.core.exceptions import ValidationError
+from django.conf import settings
 
 from user.models import Location, HardSkillName, SoftSkillName, Position
 from core.utils import progress_bar, execution_time
 from core.config import WebConfig
+from core.logger import FileRotatingLogger
 
 
 init(autoreset=True)
+
+data_2_db_logger = FileRotatingLogger(
+    WebConfig.LOG_DIR, 'data_2_db.log', debug=settings.DEBUG
+).get_logger()
 
 
 class Command(BaseCommand):
@@ -81,8 +87,9 @@ class Command(BaseCommand):
             if all(cleaned_values):
                 try:
                     model.update_or_create_normalized(*cleaned_values)
-                except ValidationError:
-                    pass
+                except ValidationError as e:
+                    data_2_db_logger.warning(
+                        f'{cleaned_values} -- ошибка: {e}')
 
     @staticmethod
     def valid_str_value(value: str | None) -> str | None:
