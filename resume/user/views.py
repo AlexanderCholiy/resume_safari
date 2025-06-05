@@ -1,6 +1,6 @@
 from django.views.generic import ListView, DetailView
 from django.contrib.auth import get_user_model
-from django.db.models import QuerySet, Q, Count
+from django.db.models import QuerySet, Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Resume, HardSkill, SoftSkill, Location, Position
@@ -29,12 +29,19 @@ class ResumeListView(ListView):
         category = self.request.GET.get('category')
 
         if search_query:
+            words = search_query.split()
+            name_filter = Q()
+            for word in words:
+                name_filter &= (
+                    Q(user__first_name__icontains=word) |
+                    Q(user__last_name__icontains=word) |
+                    Q(user__patronymic__icontains=word)
+                )
+
             queryset = queryset.filter(
-                Q(user__last_name__contains=search_query) |
-                Q(user__first_name__contains=search_query) |
-                Q(user__patronymic__contains=search_query) |
-                Q(user__username=search_query) |
-                Q(position__position__contains=search_query)
+                name_filter |
+                Q(user__username__iexact=search_query) |
+                Q(position__position__icontains=search_query)
             )
 
         if country:

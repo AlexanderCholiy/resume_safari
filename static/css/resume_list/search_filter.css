@@ -1,63 +1,128 @@
 .resume-filter-form {
+  opacity: 0.9;
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
   align-items: center;
-  justify-content: center;
-  padding: 24px;
-  margin: 20px auto;
-  max-width: 900px;
-  background-color: #fefefe;
-  border: 1px solid #ddd;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  justify-content: space-between;
 }
 
-/* .resume-filter-form input,
-.resume-filter-form select {
-  padding: 12px 16px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  outline: none;
-  transition: border-color 0.3s ease;
-  flex: 1 1 200px;
-  min-width: 180px;
-} */
+.resume-filter-form input.search-input {
+  flex: 1 1 40%;
+  min-width: 200px;
+  background-color: var(--light-background-color);
+}
 
-/* .resume-filter-form input:focus,
-.resume-filter-form select:focus {
-  border-color: #007bff;
-} */
+body.dark .resume-filter-form input.search-input {
+  background-color: var(--dark-background-color);
+}
 
-/* .filter-button {
-  padding: 12px 24px;
-  font-size: 16px;
-  font-weight: 600;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 12px;
+.resume-filter-form select.filter-select {
+  flex: 1 1 15%;
+  min-width: 150px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-} */
+  background-color: var(--light-background-color);
+}
 
-/* .filter-button:hover {
-  background-color: #0056b3;
-} */
+body.dark .resume-filter-form select.filter-select {
+  background-color: var(--dark-background-color);
+}
 
-/* @media (max-width: 768px) {
+.resume-filter-form input,
+.resume-filter-form select,
+.resume-filter-form .filter-button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  color: var(--dark-color);
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+  transition: 
+    background-color var(--transition-value),
+    color var(--transition-value);;
+}
+
+body.dark .resume-filter-form input,
+body.dark .resume-filter-form select,
+body.dark .resume-filter-form .filter-button {
+  color: var(--light-color);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.resume-filter-form input:focus,
+.resume-filter-form select:focus {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+body.dark .resume-filter-form input:focus,
+body.dark .resume-filter-form select:focus {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.resume-filter-form .filter-button {
+  flex: 1 1 15%;
+  min-width: 120px;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+  background-color: var(--light-add-background-color);
+}
+
+body.dark .resume-filter-form .filter-button {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+  background-color: var(--dark-add-background-color);  
+}
+
+.filter-button:hover {
+  color: var(--light-color);
+  background-color: var(--light-blue-color);
+}
+
+body.dark .filter-button:hover {
+  color: var(--dark-color);
+  background-color: var(--dark-red-color);
+}
+
+@media (max-width: 768px) {
   .resume-filter-form {
+    margin-top: 10px;
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
-    padding: 16px;
   }
 
-  .resume-filter-form input,
-  .resume-filter-form select,
-  .filter-button {
-    width: 100%;
-    font-size: 15px;
+  .resume-filter-form input.search-input,
+  .resume-filter-form select.filter-select,
+  .resume-filter-form .filter-button {
+    flex: 1 1 auto;
+    min-width: unset;
   }
-} */
+}
+
+.select-wrapper {
+  position: relative;
+  flex: 1 1 15%;
+  min-width: 150px;
+}
+
+.select-wrapper::after {
+  content: "▼";
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 0.8rem;
+  color: var(--dark-color);
+}
+
+body.dark .select-wrapper::after {
+  color: var(--light-color);
+}
+
+.select-wrapper select.filter-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  padding-right: 2.2rem;
+}

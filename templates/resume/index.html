@@ -40,6 +40,20 @@
     </div>
   {% endif %}
 
-  {% include "includes/paginator.html" %}
+  {% if page_obj.has_other_pages %}
+    {% with request.GET.urlencode as query_string %}
+      {% with query_string|cut:'page='|cut:'&page=' as filter_params %}
+          {% if filter_params %}
+            {% with '?'|add:filter_params|add:'&' as page_url_base %}
+            {% include "includes/paginator.html" %}
+            {% endwith %}
+          {% else %}
+            {% with '?' as page_url_base %}
+            {% include "includes/paginator.html" %}
+            {% endwith %}
+          {% endif %}
+      {% endwith %}
+    {% endwith %}
+  {% endif %}
 
 {% endblock %}

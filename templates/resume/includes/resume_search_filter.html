@@ -3,23 +3,27 @@
     type="text" 
     name="q" 
     value="{{ search_query }}" 
-    placeholder="Поиск по ФИО, username, позиции..."
+    placeholder="Профессия, должность или ФИО"
     class="search-input"
   >
 
-  <select name="country" class="filter-select">
-    <option value="">Все страны</option>
-    {% for c in countries %}
-      <option value="{{ c }}" {% if c == selected_country %}selected{% endif %}>{{ c }}</option>
-    {% endfor %}
-  </select>
+  <div class="select-wrapper">
+    <select name="country" class="filter-select">
+      <option value="">Все страны</option>
+      {% for c in countries %}
+        <option value="{{ c }}" {% if c == selected_country %}selected{% endif %}>{{ c }}</option>
+      {% endfor %}
+    </select>
+  </div>
 
-  <select name="category" class="filter-select">
-    <option value="">Все категории</option>
-    {% for cat in categories %}
-      <option value="{{ cat }}" {% if cat == selected_category %}selected{% endif %}>{{ cat }}</option>
-    {% endfor %}
-  </select>
+  <div class="select-wrapper">
+    <select name="category" class="filter-select">
+      <option value="">Все категории</option>
+      {% for cat in categories %}
+        <option value="{{ cat }}" {% if cat == selected_category %}selected{% endif %}>{{ cat }}</option>
+      {% endfor %}
+    </select>
+  </div>
 
   <button type="submit" class="filter-button">Применить</button>
 </form>
