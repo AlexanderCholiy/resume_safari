@@ -175,7 +175,10 @@ cython_debug/
 
 # Media files
 media/*
+!data/
 
 static/img/*
 
 data/*
+!data/
+!data/data_2_db.xlsx

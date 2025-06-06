@@ -42,16 +42,17 @@ class Config:
 class WebConfig(Config):
     SECRET_KEY: Optional[str] = os.getenv('WEB_SECRET_KEY')
     ACCESS_TOKEN_LIFETIME = timedelta(
-        seconds=int(os.getenv('ACCESS_TOKEN_SEC_LIFETIME'))
+        seconds=int(os.getenv('ACCESS_TOKEN_SEC_LIFETIME', 86400))
     )
-    EMAIL_SERVER: Optional[str] = os.getenv('WEB_EMAIL_SERVER')
+    EMAIL_SERVER: str = os.getenv(
+        'WEB_EMAIL_SERVER' or 'smtp.yandex.ru')
     EMAIL_PORT: int = int(os.getenv('WEB_EMAIL_PORT', 587))
     EMAIL_LOGIN: Optional[str] = os.getenv('WEB_EMAIL_LOGIN')
     EMAIL_PSWD: Optional[str] = os.getenv('WEB_EMAIL_PSWD')
     EMAIL_PSWD_RESET_TIMEOUT: int = int(
-        os.getenv('WEB_EMAIL_PSWD_RESET_TIMEOUT'))
+        os.getenv('WEB_EMAIL_PSWD_RESET_TIMEOUT', 900))
     EMAIL_LOGIN_RESET_TIMEOUT: int = int(
-        os.getenv('WEB_EMAIL_LOGIN_RESET_TIMEOUT'))
+        os.getenv('WEB_EMAIL_LOGIN_RESET_TIMEOUT', 1800))
 
     MEDIA_DIR: str = os.path.join(ROOT_DIR, 'media')
     TEMPLATES_DIR: str = os.path.join(ROOT_DIR, 'templates')
@@ -61,19 +62,21 @@ class WebConfig(Config):
     DATA_2_DB_PATH: str = os.path.join(DATA_DIR, 'data_2_db.xlsx')
     EMAIL_DIR: str = os.path.join(ROOT_DIR, 'email_outbox')
 
-    SITE_URL: str = 'http://localhost:8000'  # Поменяй в production!
-    PREFIX: str = 'resume-safari/'
+    SITE_URL: str = os.getenv('PRODUCTION_SITE_URL', 'http://localhost:8000')
+    PREFIX: str = os.getenv('PREFIX', '')
     FULL_SITE_URL: str = urljoin(SITE_URL, PREFIX)
     MAX_EMAIL_AGE = timedelta(days=1)
     MIN_WAIT_EMAIL = timedelta(seconds=30)
 
     LOG_DIR = os.path.join(ROOT_DIR, 'log')
+    DEBUG: bool = True if (
+        os.getenv('DEBUG', 'True').lower()
+    ) in ('true', '1', 'yes') else False
 
     @staticmethod
     def validate() -> None:
         WebConfig().validate_env_vars({
             'WEB_SECRET_KEY': WebConfig.SECRET_KEY,
-            'WEB_EMAIL_SERVER': WebConfig.EMAIL_SERVER,
             'WEB_EMAIL_LOGIN': WebConfig.EMAIL_LOGIN,
             'WEB_EMAIL_PSWD': WebConfig.EMAIL_PSWD,
         })

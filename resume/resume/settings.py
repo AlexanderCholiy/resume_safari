@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = WebConfig.SECRET_KEY
 
-DEBUG = True
+DEBUG = WebConfig.DEBUG
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost',]
 

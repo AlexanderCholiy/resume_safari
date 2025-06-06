@@ -29,22 +29,20 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
-PREFIX = WebConfig.PREFIX.rstrip('/')
-
 # --- Swagger/Redoc URLs ---
 swagger_urls = [
     re_path(
-        rf'^{PREFIX}/swagger(?P<format>\.json|\.yaml)$',
+        rf'^{WebConfig.PREFIX}swagger(?P<format>\.json|\.yaml)$',
         schema_view.without_ui(cache_timeout=0),
         name='schema-json',
     ),
     re_path(
-        rf'^{PREFIX}/swagger/$',
+        rf'^{WebConfig.PREFIX}swagger/$',
         schema_view.with_ui('swagger', cache_timeout=0),
         name='schema-swagger-ui',
     ),
     re_path(
-        rf'^{PREFIX}/redoc/$',
+        rf'^{WebConfig.PREFIX}redoc/$',
         schema_view.with_ui('redoc', cache_timeout=0),
         name='schema-redoc',
     ),
@@ -113,14 +111,16 @@ prefixed_urls = auth_urlpatterns + [
 ]
 
 urlpatterns = swagger_urls + [
-    path(f'{PREFIX}/', include(prefixed_urls)),
+    path(WebConfig.PREFIX, include(prefixed_urls)),
 ]
 
 # --- DEBUG MODE ---
 if settings.DEBUG:
     urlpatterns += [
-        path(f'{PREFIX}/debug/', include(debug_toolbar.urls)),
-        path(f'{PREFIX}/core/', include('core.urls', namespace='cores')),
+        path(f'{WebConfig.PREFIX}debug/', include(debug_toolbar.urls)),
+        path(
+            f'{WebConfig.PREFIX}core/', include('core.urls', namespace='cores')
+        ),
     ]
     urlpatterns += static(
         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
