@@ -105,9 +105,9 @@ TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
-USE_L10N = True
-
 USE_TZ = True
+
+SWAGGER_USE_COMPAT_RENDERERS = False
 
 AUTH_USER_MODEL = 'user.User'
 
@@ -150,7 +150,7 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'user': '10000/day',
         'anon': '1000/day',
-    }
+    },
 }
 
 

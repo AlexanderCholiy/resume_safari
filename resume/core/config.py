@@ -60,7 +60,7 @@ class WebConfig(Config):
     STATIC_ROOT: str = os.path.join(ROOT_DIR, 'static_backend_build')
     DATA_DIR: str = os.path.join(ROOT_DIR, 'data')
     DATA_2_DB_PATH: str = os.path.join(DATA_DIR, 'data_2_db.xlsx')
-    EMAIL_DIR: str = os.path.join(ROOT_DIR, 'email_outbox')
+    EMAIL_DIR: str = os.path.join(DATA_DIR, 'email_outbox')
 
     SITE_URL: str = os.getenv('PRODUCTION_SITE_URL', 'http://localhost:8000')
     PREFIX: str = os.getenv('PREFIX', '')
@@ -70,8 +70,8 @@ class WebConfig(Config):
 
     LOG_DIR = os.path.join(ROOT_DIR, 'log')
     DEBUG: bool = True if (
-        os.getenv('DEBUG', 'True').lower()
-    ) in ('true', '1', 'yes') else False
+        os.getenv('DEBUG', 'False').lower()
+    ) in ('true', '1', 'yes', 'y') else False
 
     @staticmethod
     def validate() -> None:

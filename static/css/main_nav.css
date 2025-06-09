@@ -51,6 +51,13 @@ body.dark .main-nav a.active::after {
     background-color: var(--light-add-color);
 }
 
+.nav-link.btn-logout {
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    position: relative;
+}
+
 @media (max-width: 768px) {
     .main-nav ul {
         flex-direction: column;

@@ -18,7 +18,7 @@ from .constants import (MAX_CATEGORY_LENGTH, MAX_CITY_LENGTH,
 
 
 class User(AbstractUser):
-    email = models.EmailField('Email', unique=True, blank=True)
+    email = models.EmailField('Email', unique=True)
     patronymic = models.CharField(
         'Отчество',
         max_length=MAX_USER_PATRONYMIC_LENGTH,
