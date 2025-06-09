@@ -1,11 +1,11 @@
-import pytest
 from http import HTTPStatus
 
+import pytest
+from django.contrib.auth.models import AbstractUser
 from django.test import Client
 from django.urls import reverse
-from django.contrib.auth.models import AbstractUser
 
-from .models import Resume, Position, User
+from .models import Position, Resume, User
 
 
 @pytest.fixture
