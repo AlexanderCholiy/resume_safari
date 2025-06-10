@@ -2,15 +2,13 @@ from pathlib import Path
 
 from core.config import WebConfig
 
-WebConfig.validate()
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = WebConfig.SECRET_KEY
 
 DEBUG = WebConfig.DEBUG
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost',]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', WebConfig.HOST]
 
 INTERNAL_IPS = ['127.0.0.1', 'localhost',]
 
@@ -66,9 +64,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'resume.wsgi.application'
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': WebConfig.DB_NAME,
+        'USER': WebConfig.DB_USER,
+        'PASSWORD': WebConfig.DB_PASSWORD,
+        'HOST': WebConfig.DB_HOST,
+        'PORT': WebConfig.DB_PORT
     }
 }
 

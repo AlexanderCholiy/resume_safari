@@ -94,7 +94,7 @@ class UserAuthViewSet(viewsets.ViewSet):
         uid = urlsafe_base64_encode(force_bytes(pending_user.pk))
         activation_path = reverse(
             'api:auth-activate', kwargs={'uidb64': uid, 'token': token})
-        activation_link = urljoin(WebConfig.SITE_URL, activation_path)
+        activation_link = urljoin(WebConfig.DOMAIN_NAME, activation_path)
 
         subject = f'Подтверждение почты на {WebConfig.FULL_SITE_URL}'
 
@@ -173,7 +173,7 @@ class MeViewSet(viewsets.ViewSet):
         uid = urlsafe_base64_encode(force_bytes(pending_user.pk))
         activation_path = reverse(
             'api:me-confirm-email', kwargs={'uidb64': uid, 'token': token})
-        activation_link = urljoin(WebConfig.SITE_URL, activation_path)
+        activation_link = urljoin(WebConfig.DOMAIN_NAME, activation_path)
 
         subject = f'Подтверждение нового email на {WebConfig.FULL_SITE_URL}'
         message = (

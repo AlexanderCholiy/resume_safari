@@ -1,0 +1,30 @@
+volumes:
+  pg_data:
+  static:
+  media:
+
+services:
+  resume_safari_db:
+    image: postgres:13.10
+    env_file: .env
+    restart: unless-stopped
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+  backend:
+    image: alexandercholiy/resume_safari
+    env_file: .env
+    volumes:
+      - static:/collected_static
+      - media:/app/media/
+    depends_on:
+      - resume_safari_db
+  gateway:
+    image: alexandercholiy/resume_safari_gateway
+    env_file: .env
+    ports:
+      - 8000:80
+    volumes:
+      - static:/staticfiles/
+      - media:/app/media/
+    depends_on:
+      - backend

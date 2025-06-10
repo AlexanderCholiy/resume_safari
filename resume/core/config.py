@@ -40,15 +40,15 @@ class Config:
 
 
 class WebConfig(Config):
-    SECRET_KEY: Optional[str] = os.getenv('WEB_SECRET_KEY')
+    SECRET_KEY: str = os.getenv('WEB_SECRET_KEY', 'AvSvUHtySMJqvv0foarXSl243b')
     ACCESS_TOKEN_LIFETIME = timedelta(
         seconds=int(os.getenv('ACCESS_TOKEN_SEC_LIFETIME', 86400))
     )
     EMAIL_SERVER: str = os.getenv(
         'WEB_EMAIL_SERVER' or 'smtp.yandex.ru')
     EMAIL_PORT: int = int(os.getenv('WEB_EMAIL_PORT', 587))
-    EMAIL_LOGIN: Optional[str] = os.getenv('WEB_EMAIL_LOGIN')
-    EMAIL_PSWD: Optional[str] = os.getenv('WEB_EMAIL_PSWD')
+    EMAIL_LOGIN: str = os.getenv('WEB_EMAIL_LOGIN', 'test@mail.com')
+    EMAIL_PSWD: str = os.getenv('WEB_EMAIL_PSWD', 'PFbkYwXFABJv')
     EMAIL_PSWD_RESET_TIMEOUT: int = int(
         os.getenv('WEB_EMAIL_PSWD_RESET_TIMEOUT', 900))
     EMAIL_LOGIN_RESET_TIMEOUT: int = int(
@@ -57,33 +57,25 @@ class WebConfig(Config):
     MEDIA_DIR: str = os.path.join(ROOT_DIR, 'media')
     TEMPLATES_DIR: str = os.path.join(ROOT_DIR, 'templates')
     STATIC_DIR: str = os.path.join(ROOT_DIR, 'static')
-    STATIC_ROOT: str = os.path.join(ROOT_DIR, 'static_backend_build')
+    STATIC_ROOT: str = os.path.join(ROOT_DIR, 'collected_static')
     DATA_DIR: str = os.path.join(ROOT_DIR, 'data')
     DATA_2_DB_PATH: str = os.path.join(DATA_DIR, 'data_2_db.xlsx')
     EMAIL_DIR: str = os.path.join(DATA_DIR, 'email_outbox')
 
-    SITE_URL: str = os.getenv('PRODUCTION_SITE_URL', 'http://localhost:8000')
+    DOMAIN_NAME: str = os.getenv('DOMAIN_NAME', 'http://localhost:8000')
     PREFIX: str = os.getenv('PREFIX', '')
-    FULL_SITE_URL: str = urljoin(SITE_URL, PREFIX)
+    FULL_SITE_URL: str = urljoin(DOMAIN_NAME, PREFIX)
     MAX_EMAIL_AGE = timedelta(days=1)
     MIN_WAIT_EMAIL = timedelta(seconds=30)
+    HOST = os.getenv('HOST', '127.0.0.1')
 
     LOG_DIR = os.path.join(ROOT_DIR, 'log')
     DEBUG: bool = True if (
         os.getenv('DEBUG', 'False').lower()
     ) in ('true', '1', 'yes', 'y') else False
 
-    @staticmethod
-    def validate() -> None:
-        WebConfig().validate_env_vars({
-            'WEB_SECRET_KEY': WebConfig.SECRET_KEY,
-            'WEB_EMAIL_LOGIN': WebConfig.EMAIL_LOGIN,
-            'WEB_EMAIL_PSWD': WebConfig.EMAIL_PSWD,
-        })
-        WebConfig().check_dirs([
-            WebConfig.MEDIA_DIR,
-            WebConfig.TEMPLATES_DIR,
-            WebConfig.STATIC_DIR,
-            WebConfig.DATA_DIR,
-        ])
-        WebConfig().check_files([ENV_PATH, WebConfig.DATA_2_DB_PATH])
+    DB_NAME: str = os.getenv('POSTGRES_DB', 'django')
+    DB_USER: str = os.getenv('POSTGRES_USER', 'django')
+    DB_PASSWORD: str = os.getenv('POSTGRES_PASSWORD', '')
+    DB_HOST: str = os.getenv('DB_HOST', '127.0.0.1')
+    DB_PORT: str = os.getenv('DB_PORT', 5432)

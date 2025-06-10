@@ -182,3 +182,7 @@ static/img/*
 data/*
 !data/
 !data/data_2_db.xlsx
+
+remote_server/
+
+*.bak
