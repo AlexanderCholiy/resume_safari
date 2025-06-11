@@ -8,7 +8,9 @@ SECRET_KEY = WebConfig.SECRET_KEY
 
 DEBUG = WebConfig.DEBUG
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', WebConfig.HOST]
+ALLOWED_HOSTS = [
+    '127.0.0.1', 'localhost', WebConfig.HOST, WebConfig.DOMAIN_NAME
+]
 
 INTERNAL_IPS = ['127.0.0.1', 'localhost',]
 
@@ -125,7 +127,7 @@ STATICFILES_DIRS = [WebConfig.STATIC_DIR]
 
 STATIC_ROOT = WebConfig.STATIC_ROOT
 
-MEDIA_URL = '/media-backend/'
+MEDIA_URL = '/media/'
 
 MEDIA_ROOT = WebConfig.MEDIA_DIR
 

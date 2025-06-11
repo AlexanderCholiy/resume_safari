@@ -74,8 +74,8 @@ class WebConfig(Config):
         os.getenv('DEBUG', 'False').lower()
     ) in ('true', '1', 'yes', 'y') else False
 
-    DB_NAME: str = os.getenv('POSTGRES_DB', 'django')
-    DB_USER: str = os.getenv('POSTGRES_USER', 'django')
-    DB_PASSWORD: str = os.getenv('POSTGRES_PASSWORD', '')
+    DB_NAME: str = os.getenv('POSTGRES_DB', 'django_db')
+    DB_USER: str = os.getenv('POSTGRES_USER', 'django_user')
+    DB_PASSWORD: str = os.getenv('POSTGRES_PASSWORD', 'django_password')
     DB_HOST: str = os.getenv('DB_HOST', '127.0.0.1')
     DB_PORT: str = os.getenv('DB_PORT', 5432)

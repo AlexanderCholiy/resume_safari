@@ -13,7 +13,7 @@ class FileRotatingLogger:
         debug: bool = False
     ) -> None:
         self.logger = logging.getLogger(__name__)
-        self.logger.setLevel(logging.DEBUG if debug else logging.INF)
+        self.logger.setLevel(logging.DEBUG if debug else logging.INFO)
         self.logger.propagate = False  # Запрещаем передачу логов Django
 
         os.makedirs(log_dir, exist_ok=True)
