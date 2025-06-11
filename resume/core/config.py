@@ -1,8 +1,6 @@
 import os
 from datetime import timedelta
 from typing import Final, Optional
-from urllib.parse import urljoin
-
 from dotenv import load_dotenv
 
 from .exceptions import ConfigDirError, ConfigEnvError, ConfigFileError
@@ -11,7 +9,6 @@ ROOT_DIR: Final[str] = os.path.normpath(
     os.path.join(os.path.dirname(__file__), '..', '..'))
 
 ENV_PATH: Final[str] = os.path.join(ROOT_DIR, '.env')
-load_dotenv(ENV_PATH)
 
 
 class Config:
@@ -40,19 +37,14 @@ class Config:
 
 
 class WebConfig(Config):
-    SECRET_KEY: str = os.getenv('WEB_SECRET_KEY', 'AvSvUHtySMJqvv0foarXSl243b')
-    ACCESS_TOKEN_LIFETIME = timedelta(
-        seconds=int(os.getenv('ACCESS_TOKEN_SEC_LIFETIME', 86400))
-    )
-    EMAIL_SERVER: str = os.getenv(
-        'WEB_EMAIL_SERVER' or 'smtp.yandex.ru')
-    EMAIL_PORT: int = int(os.getenv('WEB_EMAIL_PORT', 587))
-    EMAIL_LOGIN: str = os.getenv('WEB_EMAIL_LOGIN', 'test@mail.com')
-    EMAIL_PSWD: str = os.getenv('WEB_EMAIL_PSWD', 'PFbkYwXFABJv')
-    EMAIL_PSWD_RESET_TIMEOUT: int = int(
-        os.getenv('WEB_EMAIL_PSWD_RESET_TIMEOUT', 900))
-    EMAIL_LOGIN_RESET_TIMEOUT: int = int(
-        os.getenv('WEB_EMAIL_LOGIN_RESET_TIMEOUT', 1800))
+    MAX_EMAIL_AGE = timedelta(days=1)
+    MIN_WAIT_EMAIL = timedelta(seconds=30)
+    ACCESS_TOKEN_LIFETIME = timedelta(seconds=86400)
+
+    EMAIL_PORT: int = 587
+    DB_PORT: int = 5432
+    EMAIL_PSWD_RESET_TIMEOUT: int = 900
+    EMAIL_LOGIN_RESET_TIMEOUT: int = 1800
 
     MEDIA_DIR: str = os.path.join(ROOT_DIR, 'media')
     TEMPLATES_DIR: str = os.path.join(ROOT_DIR, 'templates')
@@ -61,21 +53,30 @@ class WebConfig(Config):
     DATA_DIR: str = os.path.join(ROOT_DIR, 'data')
     DATA_2_DB_PATH: str = os.path.join(DATA_DIR, 'data_2_db.xlsx')
     EMAIL_DIR: str = os.path.join(DATA_DIR, 'email_outbox')
-
-    DOMAIN_NAME: str = os.getenv('DOMAIN_NAME', 'http://localhost:8000')
-    PREFIX: str = os.getenv('PREFIX', '')
-    FULL_SITE_URL: str = urljoin(DOMAIN_NAME, PREFIX)
-    MAX_EMAIL_AGE = timedelta(days=1)
-    MIN_WAIT_EMAIL = timedelta(seconds=30)
-    HOST = os.getenv('HOST', '127.0.0.1')
-
     LOG_DIR = os.path.join(ROOT_DIR, 'log')
-    DEBUG: bool = True if (
-        os.getenv('DEBUG', 'False').lower()
-    ) in ('true', '1', 'yes', 'y') else False
 
-    DB_NAME: str = os.getenv('POSTGRES_DB', 'django_db')
-    DB_USER: str = os.getenv('POSTGRES_USER', 'django_user')
-    DB_PASSWORD: str = os.getenv('POSTGRES_PASSWORD', 'django_password')
-    DB_HOST: str = os.getenv('DB_HOST', '127.0.0.1')
-    DB_PORT: str = os.getenv('DB_PORT', 5432)
+    def __init__(self: 'WebConfig') -> None:
+        super().__init__()
+        load_dotenv(ENV_PATH, override=True)
+
+        self.DOMAIN_NAME: str = os.getenv(
+            'DOMAIN_NAME', 'http://localhost:8000')
+        self.HOST = os.getenv('HOST', '127.0.0.1')
+        self.SECRET_KEY: str = os.getenv('WEB_SECRET_KEY', 'AvSvUHtySMJqarXSl')
+
+        self.EMAIL_SERVER: str = os.getenv(
+            'WEB_EMAIL_SERVER', 'smtp.yandex.ru')
+        self.EMAIL_LOGIN: str = os.getenv('WEB_EMAIL_LOGIN', 'test@mail.com')
+        self.EMAIL_PSWD: str = os.getenv('WEB_EMAIL_PSWD', 'PFbkYwXFABJv')
+
+        self.DEBUG: bool = True if (
+            os.getenv('DEBUG', 'False').lower()
+        ) in ('true', '1', 'yes', 'y') else False
+
+        self.DB_NAME: str = os.getenv('POSTGRES_DB', 'django_db')
+        self.DB_USER: str = os.getenv('POSTGRES_USER', 'django_user')
+        self.DB_PASSWORD: str = os.getenv('POSTGRES_PASSWORD', 'django_pswd')
+        self.DB_HOST: str = os.getenv('DB_HOST', '127.0.0.1')
+
+
+web_config = WebConfig()

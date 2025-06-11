@@ -36,6 +36,7 @@ class Command(BaseCommand):
         return '\n'.join(lines)
 
     def _send_emails(self: 'Command') -> None:
+        os.makedirs(WebConfig.EMAIL_DIR, exist_ok=True)
         for filename in os.listdir(WebConfig.EMAIL_DIR):
             path = os.path.join(WebConfig.EMAIL_DIR, filename)
 

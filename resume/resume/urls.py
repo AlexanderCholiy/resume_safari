@@ -1,5 +1,5 @@
 import debug_toolbar
-from core.config import WebConfig
+from core.config import web_config
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -22,7 +22,7 @@ schema_view = get_schema_view(
         title='Resume Safari API',
         default_version='v1',
         description='Документация для проекта Resume Safari',
-        contact=openapi.Contact(email=WebConfig.EMAIL_LOGIN),
+        contact=openapi.Contact(email=web_config.EMAIL_LOGIN),
         license=openapi.License(name='BSD License'),
     ),
     public=True,
@@ -32,17 +32,17 @@ schema_view = get_schema_view(
 # --- Swagger/Redoc URLs ---
 swagger_urls = [
     re_path(
-        rf'^{WebConfig.PREFIX}swagger(?P<format>\.json|\.yaml)$',
+        r'^swagger(?P<format>\.json|\.yaml)$',
         schema_view.without_ui(cache_timeout=0),
         name='schema-json',
     ),
     re_path(
-        rf'^{WebConfig.PREFIX}swagger/$',
+        r'^swagger/$',
         schema_view.with_ui('swagger', cache_timeout=0),
         name='schema-swagger-ui',
     ),
     re_path(
-        rf'^{WebConfig.PREFIX}redoc/$',
+        r'^redoc/$',
         schema_view.with_ui('redoc', cache_timeout=0),
         name='schema-redoc',
     ),
@@ -101,7 +101,7 @@ auth_urlpatterns = [
 ]
 
 # --- Основной набор маршрутов с префиксом ---
-prefixed_urls = auth_urlpatterns + [
+app_urls = [
     path('api/', include('djoser.urls.jwt')),
     path('api/', include('api.urls', namespace='api')),
     path('pages/', include('pages.urls', namespace='pages')),
@@ -110,17 +110,13 @@ prefixed_urls = auth_urlpatterns + [
     path('', include('user.urls', namespace='user')),
 ]
 
-urlpatterns = swagger_urls + [
-    path(WebConfig.PREFIX, include(prefixed_urls)),
-]
+urlpatterns = swagger_urls + auth_urlpatterns + app_urls
 
 # --- DEBUG MODE ---
 if settings.DEBUG:
     urlpatterns += [
-        path(f'{WebConfig.PREFIX}debug/', include(debug_toolbar.urls)),
-        path(
-            f'{WebConfig.PREFIX}core/', include('core.urls', namespace='cores')
-        ),
+        path('debug/', include(debug_toolbar.urls)),
+        path('core/', include('core.urls', namespace='cores')),
     ]
     urlpatterns += static(
         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

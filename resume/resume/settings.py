@@ -1,15 +1,15 @@
 from pathlib import Path
 
-from core.config import WebConfig
+from core.config import web_config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = WebConfig.SECRET_KEY
+SECRET_KEY = web_config.SECRET_KEY
 
-DEBUG = WebConfig.DEBUG
+DEBUG = web_config.DEBUG
 
 ALLOWED_HOSTS = [
-    '127.0.0.1', 'localhost', WebConfig.HOST, WebConfig.DOMAIN_NAME
+    '127.0.0.1', 'localhost', web_config.HOST, web_config.DOMAIN_NAME
 ]
 
 INTERNAL_IPS = ['127.0.0.1', 'localhost',]
@@ -45,7 +45,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'resume.urls'
 
-TEMPLATES_DIR = WebConfig.TEMPLATES_DIR
+TEMPLATES_DIR = web_config.TEMPLATES_DIR
 
 TEMPLATES = [
     {
@@ -66,18 +66,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'resume.wsgi.application'
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': WebConfig.DB_NAME,
-        'USER': WebConfig.DB_USER,
-        'PASSWORD': WebConfig.DB_PASSWORD,
-        'HOST': WebConfig.DB_HOST,
-        'PORT': WebConfig.DB_PORT
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': web_config.DB_NAME,
+    #     'USER': web_config.DB_USER,
+    #     'PASSWORD': web_config.DB_PASSWORD,
+    #     'HOST': web_config.DB_HOST,
+    #     'PORT': web_config.DB_PORT
+    # }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -123,23 +123,23 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_URL = '/static-backend/'
 
-STATICFILES_DIRS = [WebConfig.STATIC_DIR]
+STATICFILES_DIRS = [web_config.STATIC_DIR]
 
-STATIC_ROOT = WebConfig.STATIC_ROOT
+STATIC_ROOT = web_config.STATIC_ROOT
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = WebConfig.MEDIA_DIR
+MEDIA_ROOT = web_config.MEDIA_DIR
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = WebConfig.EMAIL_DIR
-EMAIL_HOST = WebConfig.EMAIL_SERVER
-EMAIL_PORT = WebConfig.EMAIL_PORT
+EMAIL_FILE_PATH = web_config.EMAIL_DIR
+EMAIL_HOST = web_config.EMAIL_SERVER
+EMAIL_PORT = web_config.EMAIL_PORT
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = WebConfig.EMAIL_LOGIN
-EMAIL_HOST_PASSWORD = WebConfig.EMAIL_PSWD
+EMAIL_HOST_USER = web_config.EMAIL_LOGIN
+EMAIL_HOST_PASSWORD = web_config.EMAIL_PSWD
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-PASSWORD_RESET_TIMEOUT = WebConfig.EMAIL_PSWD_RESET_TIMEOUT
+PASSWORD_RESET_TIMEOUT = web_config.EMAIL_PSWD_RESET_TIMEOUT
 LOGIN_REDIRECT_URL = 'user:resume_list'
 LOGIN_URL = 'login'
 CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
@@ -163,6 +163,6 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': WebConfig.ACCESS_TOKEN_LIFETIME,
+    'ACCESS_TOKEN_LIFETIME': web_config.ACCESS_TOKEN_LIFETIME,
     'AUTH_HEADER_TYPES': ('Bearer',),
 }

@@ -1,6 +1,6 @@
 from urllib.parse import urljoin
 
-from core.config import WebConfig
+from core.config import web_config
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.tokens import default_token_generator
@@ -94,14 +94,14 @@ class UserAuthViewSet(viewsets.ViewSet):
         uid = urlsafe_base64_encode(force_bytes(pending_user.pk))
         activation_path = reverse(
             'api:auth-activate', kwargs={'uidb64': uid, 'token': token})
-        activation_link = urljoin(WebConfig.DOMAIN_NAME, activation_path)
+        activation_link = urljoin(web_config.DOMAIN_NAME, activation_path)
 
-        subject = f'Подтверждение почты на {WebConfig.FULL_SITE_URL}'
+        subject = f'Подтверждение почты на {web_config.DOMAIN_NAME}'
 
         message = (
             f'Здравствуйте, {pending_user.username}!\n\n'
             'Вы указали этот адрес при регистрации на '
-            f'{WebConfig.FULL_SITE_URL}.\n'
+            f'{web_config.DOMAIN_NAME}.\n'
             f'Для подтверждения перейдите по ссылке: \n{activation_link}\n\n'
             f'Срок действия ссылки — 1 день.\n\n'
             f'Если вы не регистрировались — просто проигнорируйте это письмо.'
@@ -173,9 +173,9 @@ class MeViewSet(viewsets.ViewSet):
         uid = urlsafe_base64_encode(force_bytes(pending_user.pk))
         activation_path = reverse(
             'api:me-confirm-email', kwargs={'uidb64': uid, 'token': token})
-        activation_link = urljoin(WebConfig.DOMAIN_NAME, activation_path)
+        activation_link = urljoin(web_config.DOMAIN_NAME, activation_path)
 
-        subject = f'Подтверждение нового email на {WebConfig.FULL_SITE_URL}'
+        subject = f'Подтверждение нового email на {web_config.DOMAIN_NAME}'
         message = (
             f'Здравствуйте, {pending_user.username}!\n\n'
             'Для подтверждения нового email перейдите по ссылке:\n'

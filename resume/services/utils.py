@@ -1,4 +1,4 @@
-from core.config import WebConfig
+from core.config import web_config
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
@@ -19,11 +19,11 @@ def send_activation_email(
         'services:activate', kwargs={'uidb64': uid, 'token': token})
     activation_link = request.build_absolute_uri(activation_path)
 
-    subject = f'Подтверждение почты на {WebConfig.FULL_SITE_URL}'
+    subject = f'Подтверждение почты на {web_config.DOMAIN_NAME}'
     message = (
         f'Здравствуйте, {pending_user.username}!\n\n'
         f'Вы указали этот адрес при регистрации на '
-        f'{WebConfig.FULL_SITE_URL}.\n'
+        f'{web_config.DOMAIN_NAME}.\n'
         f'Для подтверждения перейдите по ссылке: \n{activation_link}\n\n'
         f'Срок действия ссылки — 1 день.\n\n'
         f'Если вы не регистрировались — просто проигнорируйте это письмо.'
