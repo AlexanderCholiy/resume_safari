@@ -14,6 +14,11 @@ ALLOWED_HOSTS = [
 
 INTERNAL_IPS = ['127.0.0.1', 'localhost',]
 
+CSRF_TRUSTED_ORIGINS = [
+    f'https://{web_config.HOST}',
+    f'https://{web_config.DOMAIN_NAME}',
+]
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
