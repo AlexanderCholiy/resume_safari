@@ -1,5 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const styles = ['classic', 'modern', 'special'];
+  const styles = [
+    'classic',
+    'modern',
+    // 'special',
+  ];
   const styleToggle = document.getElementById('style-toggle');
   const styleIcon = document.getElementById('style-icon');
   const body = document.body;
