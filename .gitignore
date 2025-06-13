@@ -183,3 +183,5 @@ data/*
 remote_server/
 
 *.bak
+
+collected_static/

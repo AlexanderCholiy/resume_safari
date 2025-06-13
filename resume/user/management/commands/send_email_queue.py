@@ -4,14 +4,14 @@ import os
 import time
 from email import message_from_file
 
-from core.config import WebConfig
+from core.config import web_config
 from core.logger import FileRotatingLogger
 from django.conf import settings
 from django.core.mail import EmailMessage, get_connection
 from django.core.management.base import BaseCommand
 
 email_logger = FileRotatingLogger(
-    WebConfig.LOG_DIR, 'emails.log', debug=settings.DEBUG
+    web_config.LOG_DIR, 'emails.log', debug=settings.DEBUG
 ).get_logger()
 
 
@@ -24,7 +24,7 @@ class Command(BaseCommand):
             self._send_emails()
             elapsed_time = time.time() - start_time
             wait_time = max(
-                0, WebConfig.MIN_WAIT_EMAIL.total_seconds() - elapsed_time)
+                0, web_config.MIN_WAIT_EMAIL.total_seconds() - elapsed_time)
             time.sleep(wait_time)
 
     @staticmethod
@@ -36,15 +36,15 @@ class Command(BaseCommand):
         return '\n'.join(lines)
 
     def _send_emails(self: 'Command') -> None:
-        os.makedirs(WebConfig.EMAIL_DIR, exist_ok=True)
-        for filename in os.listdir(WebConfig.EMAIL_DIR):
-            path = os.path.join(WebConfig.EMAIL_DIR, filename)
+        os.makedirs(web_config.EMAIL_DIR, exist_ok=True)
+        for filename in os.listdir(web_config.EMAIL_DIR):
+            path = os.path.join(web_config.EMAIL_DIR, filename)
 
             if not path.endswith('.log') or not os.path.isfile(path):
                 continue
 
             file_ctime = dt.datetime.fromtimestamp(os.path.getctime(path))
-            if dt.datetime.now() - file_ctime > WebConfig.MAX_EMAIL_AGE:
+            if dt.datetime.now() - file_ctime > web_config.MAX_EMAIL_AGE:
                 os.remove(path)
                 continue
 
@@ -52,7 +52,10 @@ class Command(BaseCommand):
                 with open(path, 'r', encoding='utf-8') as f:
                     msg = message_from_file(f)
 
-                subject = msg.get('Subject', '')
+                subject = (
+                    msg.get('Subject', '')
+                    .replace('\n', '').replace('\r', '').strip()
+                )
                 from_email = msg.get('From')
                 to = msg.get('To').split(',')
                 body = self.clean_email_footer(msg.get_payload())
