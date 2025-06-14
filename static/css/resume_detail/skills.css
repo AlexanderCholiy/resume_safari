@@ -4,13 +4,13 @@
 
 .resume-card .hard-skills {
   flex: 0 1 60%;
-  min-width: 300px;
+  min-width: 200px;
   text-align: left;
 }
 
 .resume-card .soft-skills {
   flex: 0 1 35%;
-  min-width: 300px;
+  min-width: 200px;
 }
 
 #skills .resume-card h2 {
@@ -105,6 +105,12 @@ body.dark .hard-skills td {
 }
 
 @media (max-width: 768px) {
+  .resume-card td {
+    padding: 5px;
+    height: 15px;
+    font-size: 0.6rem;
+  }
+
   .resume-card .hard-skills,
   .resume-card .soft-skills {
     width: 100%;
