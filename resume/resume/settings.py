@@ -136,7 +136,8 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = web_config.MEDIA_DIR
 
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_FILE_PATH = web_config.EMAIL_DIR
 EMAIL_HOST = web_config.EMAIL_SERVER
 EMAIL_PORT = web_config.EMAIL_PORT
